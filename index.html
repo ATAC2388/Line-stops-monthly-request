@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js สำหรับทำ Dashboard กราฟ -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -30,121 +29,77 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-en), var(--font-th), sans-serif; background-color: var(--bg-color); color: var(--text-color); padding-bottom: 60px; }
 
-        body {
-            font-family: var(--font-en), var(--font-th), sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.5;
-            padding-bottom: 60px;
-        }
-
-        /* --- OVERLAY SCREENS --- */
-        .overlay-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #0b3c5d 0%, #061f30 100%);
-            z-index: 9999; display: flex; justify-content: center; align-items: center;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 40px; border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            width: 100%; max-width: 420px; text-align: center;
-        }
-
+        /* OVERLAY SCREENS */
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0b3c5d 0%, #061f30 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: rgba(255, 255, 255, 0.98); padding: 40px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); width: 100%; max-width: 450px; text-align: center; }
         .login-card i { font-size: 50px; color: var(--primary-color); margin-bottom: 15px; }
         .login-card h2 { font-size: 22px; color: var(--primary-color); margin-bottom: 8px; }
         .login-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
-        .login-card input, .login-card select {
-            width: 100%; padding: 12px; border: 1px solid var(--border-color);
-            border-radius: 8px; margin-bottom: 16px; font-size: 16px; font-family: var(--font-th);
-        }
+        .login-card input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 16px; font-size: 15px; font-family: var(--font-th); }
         .login-card input[type="password"] { text-align: center; letter-spacing: 2px; }
-
-        .remark-danger {
-            background-color: #fff5f5; border: 1px solid #ffe3e3;
-            color: var(--danger-color); padding: 12px; border-radius: 6px;
-            font-size: 12px; font-weight: 600; text-align: left; margin-bottom: 16px;
-            line-height: 1.6;
-        }
-
-        .login-card button {
-            width: 100%; padding: 12px; background-color: var(--primary-color);
-            color: white; border: none; border-radius: 8px; font-family: var(--font-th);
-            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-        }
+        
+        .remark-danger { background-color: #fff5f5; border: 1px solid #ffe3e3; color: var(--danger-color); padding: 12px; border-radius: 6px; font-size: 12px; font-weight: 600; text-align: left; margin-bottom: 16px; line-height: 1.6; }
+        .login-card button { width: 100%; padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-family: var(--font-th); font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .login-card button:hover { background-color: var(--primary-light); }
+        .checkbox-container { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); margin-bottom: 16px; text-align: left; }
+        .checkbox-container input { width: auto; margin: 0; }
 
-        /* --- APP LAYOUT --- */
+        /* WELCOME SCREEN */
+        .welcome-badge { background: #e2f0fd; border: 1px solid #b8daff; color: #004085; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 18px; margin-bottom: 20px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.9; } 50% { opacity: 1; } 100% { opacity: 0.9; } }
+
+        /* APP LAYOUT */
         #mainApp { display: none; }
-
-        header {
-            background-color: var(--primary-color); color: #ffffff;
-            padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+        header { background-color: var(--primary-color); color: #ffffff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .logo-area { display: flex; align-items: center; gap: 12px; }
         .logo-area h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+        .user-status-area { display: flex; align-items: center; gap: 20px; }
+        .user-info-tag { color: white; font-size: 13px; text-align: right; line-height: 1.4; }
+        .btn-logout { background: none; border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: var(--font-th); }
+        .lang-switch { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; font-family: var(--font-en); font-weight: 600; }
 
-        .user-status-area { display: flex; align-items: center; gap: 12px; }
-        .user-info-tag { color: white; font-size: 13px; text-align: right; }
-        .btn-logout {
-            background: none; border: 1px solid rgba(255,255,255,0.4); color: white;
-            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: var(--font-th);
-        }
-
-        .system-bar {
-            background-color: #e9ecef; padding: 10px 30px;
-            display: flex; justify-content: space-between; align-items: center; font-size: 13px;
-            border-bottom: 1px solid var(--border-color);
-        }
+        .system-bar { background-color: #e9ecef; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; border-bottom: 1px solid var(--border-color); }
         .clock-display { font-weight: bold; color: var(--primary-color); }
 
-        /* --- DASHBOARD STYLES --- */
-        .dashboard-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px;
-        }
-        .widget-card {
-            background: white; padding: 20px; border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color);
-            display: flex; flex-direction: column; justify-content: center;
-        }
-        .widget-card h3 { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
-        .widget-val { font-size: 24px; font-weight: 700; color: var(--primary-color); }
+        /* NAV TABS MENU */
+        .nav-tabs { display: flex; background: white; border-bottom: 1px solid var(--border-color); padding: 0 30px; }
+        .tab-btn { padding: 15px 24px; border: none; background: none; font-family: var(--font-th); font-size: 15px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+        .tab-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .tab-btn i { margin-right: 8px; }
+        .page-content { display: none; }
+        .page-content.active { display: block; }
 
-        .charts-grid {
-            display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px;
-        }
-        .chart-card {
-            background: white; padding: 20px; border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color);
-        }
-        .chart-card h3 { font-size: 14px; color: var(--primary-color); margin-bottom: 15px; border-left: 4px solid var(--primary-color); padding-left: 8px; }
-        .chart-wrapper { position: relative; height: 220px; width: 100%; }
+        /* DASHBOARD STYLES */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px; }
+        .chart-card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+        .chart-card h3 { font-size: 15px; color: var(--primary-color); margin-bottom: 20px; border-left: 4px solid var(--primary-color); padding-left: 10px; }
+        .chart-wrapper { position: relative; height: 320px; width: 100%; }
 
-        /* --- ADMIN PANEL --- */
-        .admin-panel {
-            display: none; background-color: #fff3cd; border: 1px solid #ffeeba;
-            padding: 15px; border-radius: 12px; margin-bottom: 25px;
-            align-items: center; justify-content: space-between;
-        }
+        /* ADMIN PANEL */
+        .admin-panel { display: none; background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 12px; margin-bottom: 25px; align-items: center; justify-content: space-between; }
+        .switch-container { display: flex; background: #e9ecef; border-radius: 20px; padding: 2px; width: 100px; }
+        .switch-btn { flex: 1; text-align: center; padding: 4px 0; font-size: 11px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-radius: 15px; }
+        .switch-btn.active-no { background-color: var(--danger-color); color: white; }
+        .switch-btn.active-yes { background-color: var(--success-color); color: white; }
 
-        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 1350px; margin: 25px auto; padding: 0 20px; }
         .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .board-title h2 { font-size: 22px; color: var(--primary-color); }
+        .board-title h2 { font-size: 20px; color: var(--primary-color); }
         
-        .filter-area {
-            display: flex; gap: 10px; align-items: center; background: white;
-            padding: 8px 15px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px;
-        }
+        .controls-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; width: 100%; justify-content: space-between; margin-bottom: 15px; }
+        .search-box { position: relative; width: 300px; }
+        .search-box input { width: 100%; padding: 8px 12px 8px 35px; border: 1px solid var(--border-color); border-radius: 6px; font-family: var(--font-th); font-size: 14px; }
+        .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
+        .filter-area { display: flex; gap: 10px; align-items: center; background: white; padding: 8px 15px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; }
         .btn-primary { background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-family: var(--font-th); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .btn-primary:hover:not(:disabled) { background-color: var(--primary-light); }
         .btn-primary:disabled { background-color: #ccc; cursor: not-allowed; }
         .btn-success { background-color: var(--success-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-family: var(--font-th); font-weight: 600; cursor: pointer; }
 
-        /* --- TABLES --- */
+        /* TABLES & BADGES */
         .card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border-color); overflow: hidden; }
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -153,7 +108,9 @@
         
         .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
         .badge-line { background-color: #e2f0fd; color: #004085; }
-        .badge-hours { background-color: #f8d7da; color: #721c24; }
+        .badge-hours { background-color: #fff3cd; color: #856404; font-weight: 700; }
+        .badge-shift-d { background-color: #e3f2fd; color: #0d47a1; border: 1px solid #bbdefb; }
+        .badge-shift-n { background-color: #311b92; color: #ffffff; }
 
         .action-btns { display: flex; gap: 6px; }
         .btn-icon { border: none; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -161,7 +118,7 @@
         .btn-edit { background-color: #fff3cd; color: #856404; }
         .btn-delete { background-color: #f8d7da; color: #721c24; }
 
-        /* --- MODALS --- */
+        /* MODALS */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 20px; }
         .modal-content { background-color: var(--card-bg); border-radius: 12px; width: 100%; max-width: 850px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 90vh; display: flex; flex-direction: column; }
         .modal-header { padding: 20px; border-bottom: 1px solid var(--border-color); background-color: var(--primary-color); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -175,79 +132,78 @@
         .time-select-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
         .radio-group { display: flex; flex-wrap: wrap; gap: 12px; background: #fafafa; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; }
         .radio-item { display: flex; align-items: center; gap: 6px; font-size: 13.5px; }
-        
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; background-color: #f8f9fa; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
         .btn-secondary { background-color: #e2e6ea; color: #495057; border: none; padding: 10px 20px; border-radius: 6px; font-family: var(--font-th); font-weight: 600; cursor: pointer; }
-        
-        .switch-container { display: flex; background: #e9ecef; border-radius: 20px; padding: 2px; width: 100px; }
-        .switch-btn { flex: 1; text-align: center; padding: 4px 0; font-size: 11px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-radius: 15px; }
-        .switch-btn.active-no { background-color: var(--danger-color); color: white; }
-        .switch-btn.active-yes { background-color: var(--success-color); color: white; }
 
         .detail-row { display: flex; border-bottom: 1px solid #f1f1f1; padding: 10px 0; }
         .detail-label { width: 35%; font-weight: 600; color: var(--primary-color); }
         .detail-value { width: 65%; }
 
-        .status-banner {
-            display: none; background-color: #f8d7da; color: #721c24;
-            padding: 12px 30px; border-bottom: 1px solid #f5c6cb;
-            align-items: center; gap: 12px; font-weight: 600; font-size: 14px;
-        }
-
+        .status-banner { display: none; background-color: #f8d7da; color: #721c24; padding: 12px 30px; border-bottom: 1px solid #f5c6cb; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; }
         .toast { position: fixed; bottom: 20px; right: 20px; background-color: #333; color: white; padding: 12px 24px; border-radius: 6px; z-index: 2000; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- --- 1. STEP 1: LOGIN SCREEN --- -->
+    <!-- --- 1. DOCK STEP 1: LOGIN SECURITY --- -->
     <div id="loginOverlay" class="overlay-screen">
         <div class="login-card">
-            <i class="fa-solid fa-shield-halved"></i>
-            <h2>เข้าสู่ระบบส่วนกลาง</h2>
-            <p>กรุณาใส่รหัสผ่านสิทธิ์การใช้งาน</p>
+            <i class="fa-solid fa-lock-open"></i>
+            <h2 data-th="เข้าสู่ระบบส่วนกลาง" data-en="Central Gate Login">เข้าสู่ระบบส่วนกลาง</h2>
+            <p data-th="กรุณาใส่รหัสผ่านสิทธิ์การใช้งาน" data-en="Please input gate password">กรุณาใส่รหัสผ่านสิทธิ์การใช้งาน</p>
             <input type="password" id="sysPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') verifyLogin()">
-            <button onclick="verifyLogin()">ตรวจสอบสิทธิ์ <i class="fa-solid fa-arrow-right"></i></button>
+            <button onclick="verifyLogin()"><span data-th="ตรวจสอบสิทธิ์" data-en="Verify Authenticate">ตรวจสอบสิทธิ์</span> <i class="fa-solid fa-arrow-right"></i></button>
         </div>
     </div>
 
-    <!-- --- 2. STEP 2: USER PROFILE VERIFICATION --- -->
+    <!-- --- 2. DOCK STEP 2: USER PROFILE REGISTRATION --- -->
     <div id="profileOverlay" class="overlay-screen" style="display: none;">
         <div class="login-card" style="max-width: 480px;">
-            <i class="fa-solid fa-user-gear" style="color: var(--primary-light);"></i>
-            <h2>ยืนยันตัวตนพนักงาน</h2>
-            <p style="margin-bottom: 15px;">บันทึกข้อมูลส่วนบุคคลเพื่อการตรวจสอบข้อมูลย้อนกลับ</p>
+            <i class="fa-solid fa-user-shield" style="color: var(--primary-light);"></i>
+            <h2 data-th="ลงทะเบียนตัวตนพนักงาน" data-en="Employee Verification">ลงทะเบียนตัวตนพนักงาน</h2>
+            <p data-th="บันทึกข้อมูลผู้ใช้งานจริงเพื่อการตรวจสอบย้อนกลับ" data-en="Verify identity profile for logging traceability">บันทึกข้อมูลผู้ใช้งานจริงเพื่อการตรวจสอบย้อนกลับ</p>
             
             <div class="remark-danger">
-                ⚠️ **คำเตือนความปลอดภัย:**<br>
-                กรุณาระบุชื่อและรหัสพนักงานตามความเป็นจริง ห้ามแอบอ้างชื่อผู้อื่นโดยเด็ดขาด เนื่องจากระบบมีการบันทึกประวัติการเข้าใช้งานและการทำงาน (Audit Trail) เพื่อความโปร่งใสในการตรวจสอบย้อนกลับ
+                ⚠️ <strong data-th="คำเตือนความปลอดภัย:" data-en="Security Remark:">คำเตือนความปลอดภัย:</strong><br>
+                <span data-th="กรุณาระบุชื่อและรหัสพนักงานตามความเป็นจริง ห้ามแอบอ้างชื่อผู้อื่นโดยเด็ดขาด เนื่องจากระบบมีการบันทึกประวัติ (Audit Trail) เพื่อความโปร่งใส" data-en="Please input your actual identity. Falsification is strictly prohibited. Every single action is tracked via internal Audit Trail.">กรุณาระบุชื่อและรหัสพนักงานตามความเป็นจริง ห้ามแอบอ้างชื่อผู้อื่นโดยเด็ดขาด เนื่องจากระบบมีการบันทึกประวัติ (Audit Trail) เพื่อความโปร่งใส</span>
             </div>
 
-            <input type="text" id="userRealName" placeholder="ชื่อ - นามสกุลจริง">
-            <input type="text" id="userEmpId" placeholder="รหัสพนักงาน (e.g. 69XXX)">
-            <select id="userBelongGroup">
-                <option value="">-- เลือกฝ่าย/กลุ่มสังกัดของคุณ --</option>
-                <option value="PE">Production Engineering (PE)</option>
-                <option value="MT-DC">Maintenance Die Casting (MT-DC)</option>
-                <option value="QC">Quality Control (QC)</option>
-                <option value="Valve Body">Valve Body Production</option>
-                <option value="IMV">IMV Production</option>
-                <option value="non-IMV">non-IMV Production</option>
-                <option value="Melting">Melting Production</option>
-            </select>
-            <button onclick="submitUserProfile()">เข้าสู่ระบบผลิตจริง <i class="fa-solid fa-circle-check"></i></button>
+            <input type="text" id="userRealName" placeholder="ชื่อ - นามสกุลจริง / Full name">
+            <input type="text" id="userEmpId" placeholder="รหัสพนักงาน / Employee ID (e.g. 69XXX)">
+            <input type="text" id="userBelongGroup" placeholder="หน่วยงานย่อยของคุณ / Personal Belong Group (e.g. PE-Admin)">
+            
+            <div class="checkbox-container">
+                <input type="checkbox" id="rememberMeCheck">
+                <label for="rememberMeCheck" data-th="จำชื่อฉันในเครื่องคอมพิวเตอร์นี้" data-en="Remember my profile on this device">จำชื่อฉันในเครื่องคอมพิวเตอร์นี้</label>
+            </div>
+
+            <button onclick="submitUserProfile()"><span data-th="บันทึกและเข้าใช้งาน" data-en="Save & Enter Portal">บันทึกและเข้าใช้งาน</span> <i class="fa-solid fa-right-to-bracket"></i></button>
         </div>
     </div>
 
-    <!-- --- 3. MAIN APPLICATION --- -->
+    <!-- --- 3. DOCK STEP 2.5: WELCOME KITTINUN --- -->
+    <div id="welcomeOverlay" class="overlay-screen" style="display: none;">
+        <div class="login-card" style="background: #061f30; border: 2px solid var(--accent-color); max-width: 500px;">
+            <i class="fa-solid fa-crown" style="color: var(--accent-color); font-size:60px; margin-bottom:20px;"></i>
+            <div class="welcome-badge">👑 Welcome Kittinun</div>
+            <p style="color:#b0bec5; font-size: 15px;" data-th="สิทธิ์ผู้ดูแลระบบระดับสูง เปิดใช้งานความสามารถแอดมินเต็มรูปแบบ" data-en="Authorized Administrator Account. Full operation control granted.">สิทธิ์ผู้ดูแลระบบระดับสูง เปิดใช้งานความสามารถแอดมินเต็มรูปแบบ</p>
+            <button onclick="enterAdminDashboard()" style="background-color: var(--accent-color); color: #111; font-weight: bold; margin-top:15px;">Launch Application <i class="fa-solid fa-rocket"></i></button>
+        </div>
+    </div>
+
+    <!-- --- 4. MAIN APPLICATION APPLICATION --- -->
     <div id="mainApp">
         <div class="status-banner" id="lockStatusBanner">
             <i class="fa-solid fa-circle-exclamation fa-lg"></i>
-            <span><strong>[ประกาศ]</strong> ระบบปิดรับคำร้องประจำเดือนนี้แล้ว คุณสามารถดูและ Export Excel ได้อย่างเดียว</span>
+            <span data-th="[ประกาศ] ระบบปิดรับคำร้องประจำเดือนนี้แล้ว คุณสามารถดูและ Export Excel ได้อย่างเดียว" data-en="[Notice] Current month log cycle locked. Data visibility & Export available only.">[ประกาศ] ระบบปิดรับคำร้องประจำเดือนนี้แล้ว คุณสามารถดูและ Export Excel ได้อย่างเดียว</span>
         </div>
 
         <div class="system-bar">
-            <div><i class="fa-solid fa-clock"></i> เวลาในระบบ: <span id="realtimeClock" class="clock-display">--:--:--</span></div>
-            <div><i class="fa-solid fa-calendar-check"></i> รอบเดือนเปิดรับงาน: <span style="font-weight: bold; color:var(--success-color);" id="activeSystemMonthDisplay"></span></div>
+            <div><i class="fa-solid fa-clock"></i> <span data-th="เวลาในระบบ:" data-en="System Clock:">เวลาในระบบ:</span> <span id="realtimeClock" class="clock-display">--:--:--</span></div>
+            <div>
+                <i class="fa-solid fa-calendar-check"></i> <span data-th="รอบเดือนเปิดระบบ:" data-en="Active Operation Cycle:">รอบเดือนเปิดระบบ:</span> 
+                <span style="font-weight: bold; color:var(--success-color);" id="activeSystemMonthDisplay"></span>
+            </div>
         </div>
 
         <header>
@@ -256,20 +212,28 @@
                 <h1>ATAC - Line Stop Portal</h1>
             </div>
             <div class="user-status-area">
+                <select class="lang-switch" id="langSelector" onchange="changeLanguage(this.value)">
+                    <option value="th">TH</option>
+                    <option value="en">EN</option>
+                </select>
                 <div class="user-info-tag" id="userInfoTag"></div>
-                <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-sign-out-alt"></i> ออก</button>
+                <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-sign-out-alt"></i> <span data-th="ออกจากระบบ" data-en="Logout">ออกจากระบบ</span></button>
             </div>
         </header>
 
+        <!-- NAVIGATION TAB BAR -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="tabRequestBtn" onclick="switchTab('requestPage')"><i class="fa-solid fa-paper-plane"></i> <span data-th="ส่งคำร้องและรายการ" data-en="Submission Portal">ส่งคำร้องและรายการ</span></button>
+            <button class="tab-btn" id="tabDashBtn" onclick="switchTab('dashboardPage')"><i class="fa-solid fa-chart-pie"></i> <span data-th="หน้าสรุปผลการวิเคราะห์" data-en="Analytics Dashboard">หน้าสรุปผลการวิเคราะห์</span></button>
+        </div>
+
         <div class="container">
-            
-            <!-- ADMIN PANEL -->
+            <!-- ADMIN CONTROL PANEL BUTTONS -->
             <div class="admin-panel" id="adminControlPanel">
-                <div style="color: #856404; font-weight: bold;"><i class="fa-solid fa-gears"></i> แผงควบคุมแอดมิน (ตั้งค่ารอบเดือน & ล็อกระบบ)</div>
+                <div style="color: #856404; font-weight: bold;"><i class="fa-solid fa-gears"></i> Admin System Controls (รอบแอดมิน Kittinun)</div>
                 <div style="display: flex; align-items: center; gap: 15px;">
-                    <label style="font-size:12px;">กำหนดรอบเดือนใช้งาน:</label>
+                    <label style="font-size:12px;">รอบเดือนคุมงาน:</label>
                     <select id="adminTargetMonth" style="padding:4px; width:15px0px; font-size:12px;" onchange="adminChangeMonth(this.value)"></select>
-                    
                     <div class="switch-container">
                         <div class="switch-btn active-no" id="lockBtnClose" onclick="toggleSystemOpen(false)">ปิดระบบ</div>
                         <div class="switch-btn" id="lockBtnOpen" onclick="toggleSystemOpen(true)">เปิดระบบ</div>
@@ -277,87 +241,84 @@
                 </div>
             </div>
 
-            <!-- --- DASHBOARD SECTION --- -->
-            <div class="dashboard-grid">
-                <div class="widget-card">
-                    <h3>ชั่วโมงหยุดไลน์รวมประจำเดือน</h3>
-                    <div class="widget-val" id="dashTotalHours">0.00 ชม.</div>
-                </div>
-                <div class="widget-card">
-                    <h3>จำนวนคำร้องขอหยุด</h3>
-                    <div class="widget-val" id="dashTotalCount">0 รายการ</div>
-                </div>
-                <div class="widget-card">
-                    <h3>ไลน์ที่หยุดเยอะที่สุด</h3>
-                    <div class="widget-val" id="dashTopLine">-</div>
-                </div>
-                <div class="widget-card">
-                    <h3>สาเหตุหลักอันดับ 1</h3>
-                    <div class="widget-val" id="dashTopReason">-</div>
-                </div>
-            </div>
-
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <h3>📊 สถิติจั่วโมงหยุดแยกตาม Group Production (ชม.)</h3>
-                    <div class="chart-wrapper"><canvas id="groupBarChart"></canvas></div>
-                </div>
-                <div class="chart-card">
-                    <h3>🍕 สัดส่วนสาเหตุการหยุด (Main Request)</h3>
-                    <div class="chart-wrapper"><canvas id="requestPieChart"></canvas></div>
-                </div>
-            </div>
-
-            <!-- --- DATA BOARD HEADER --- -->
-            <div class="board-header">
-                <div class="board-title">
-                    <h2>รายการคำร้องขออนุมัติหยุดไลน์</h2>
-                </div>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <div class="filter-area">
-                        <i class="fa-solid fa-filter"></i> เลือกดูเดือน:
-                        <select id="viewMonthFilter" style="padding:2px; border:none;" onchange="renderTable()"></select>
+            <!-- --- PAGE 1: SUBMISSION REQUEST LIST --- -->
+            <div id="requestPage" class="page-content active">
+                <div class="board-header">
+                    <div class="board-title">
+                        <h2 data-th="รายการคำร้องขออนุมัติหยุดไลน์ผลิต" data-en="Production Line Stop Log List">รายการคำร้องขออนุมัติหยุดไลน์ผลิต</h2>
                     </div>
-                    <button class="btn-success" onclick="exportToExcelCSV()"><i class="fa-solid fa-file-excel"></i> Export CSV</button>
-                    <button class="btn-primary" id="btnCreateNew" onclick="openNewRequestModal()"><i class="fa-solid fa-plus"></i> สร้างคำขอใหม่</button>
+                    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="tableSearchBox" onkeyup="renderTable()" placeholder="ค้นหาข้อมูลด่วน / Live Search...">
+                        </div>
+                        <div class="filter-area">
+                            <i class="fa-solid fa-filter"></i> <span data-th="คลังบันทึกเก่า:" data-en="Select Month:">คลังบันทึกเก่า:</span>
+                            <select id="viewMonthFilter" style="padding:2px; border:none;" onchange="renderTable()"></select>
+                        </div>
+                        <button class="btn-success" onclick="exportToExcelCSV()"><i class="fa-solid fa-file-excel"></i> Export CSV</button>
+                        <button class="btn-primary" id="btnCreateNew" onclick="openNewRequestModal()"><i class="fa-solid fa-plus"></i> <span data-th="สร้างคำขอใหม่" data-en="New Request">สร้างคำขอใหม่</span></button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Line</th>
+                                    <th>Group</th>
+                                    <th>Model</th>
+                                    <th>Die/Mold</th>
+                                    <th data-th="กะ" data-en="Shift">กะ</th>
+                                    <th data-th="เวลาเริ่มต้น" data-en="Start Date/Time">เวลาเริ่มต้น</th>
+                                    <th data-th="ชั่วโมงหยุดสะสม" data-en="Duration Hours">ชั่วโมงหยุดสะสม</th>
+                                    <th>Main Request</th>
+                                    <th data-th="ผู้บันทึกระบบ" data-en="Issued By">ผู้บันทึกระบบ</th>
+                                    <th style="text-align: center;" data-th="จัดการ" data-en="Actions">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requestTableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Line</th>
-                                <th>Group</th>
-                                <th>Model</th>
-                                <th>D/N</th>
-                                <th>Start Date/Time</th>
-                                <th>Hours</th>
-                                <th>Main Request</th>
-                                <th>ผู้ส่งคำร้อง</th>
-                                <th style="text-align: center;">จัดการ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="requestTableBody"></tbody>
-                    </table>
+            <!-- --- PAGE 2: ANALYTICS DASHBOARD (CHARTS ONLY) --- -->
+            <div id="dashboardPage" class="page-content">
+                <div class="board-header">
+                    <div class="board-title">
+                        <h2 data-th="📊 แผงวิเคราะห์กราฟข้อมูล Line Stop ประจำเดือน" data-en="📊 Monthly Line Stop Analytics Charts Dashboard">📊 แผงวิเคราะห์กราฟข้อมูล Line Stop ประจำเดือน</h2>
+                    </div>
+                </div>
+                
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 data-th="สถิติจั่วโมงหยุดรวมแยกตาม Group Production (ชั่วโมง)" data-en="Total Accumulated Stop Hours by Production Group (Hours)">สถิติจั่วโมงหยุดรวมแยกตาม Group Production (ชั่วโมง)</h3>
+                        <div class="chart-wrapper"><canvas id="groupBarChart"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 data-th="สัดส่วนจำนวนครั้งการหยุดคีย์แยกตามหัวข้อหลัก (Main Request)" data-en="Downtime Failure Event Contribution Ratio (Main Request)">สัดส่วนจำนวนครั้งการหยุดคีย์แยกตามหัวข้อหลัก (Main Request)</h3>
+                        <div class="chart-wrapper"><canvas id="requestPieChart"></canvas></div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <!-- --- FORM MODAL --- -->
+    <!-- --- FORM MODAL DATA FILL --- -->
     <div class="modal" id="requestModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">สร้างคำขอ Line Stop ใหม่</h3>
+                <h3 id="modalTitle">สร้างคำขอ Line Stop ใหม่ (ATAC)</h3>
                 <button class="close-modal" onclick="closeModal('requestModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="editIndex">
 
                 <div class="form-group">
-                    <label>รอบเดือนข้อมูลบันทึก</label>
+                    <label data-th="รอบเดือนข้อมูลบันทึก" data-en="Assigned Cycle Month">รอบเดือนข้อมูลบันทึก</label>
                     <input type="text" id="formMonthYear" disabled style="background:#e9ecef; font-weight:bold; color:var(--primary-color);">
                 </div>
 
@@ -375,30 +336,22 @@
                 </div>
 
                 <div class="form-group">
-                    <label>2. Group สำหรับหยุดไลน์จริง (เลือกอิสระข้ามสายงานได้) <span style="color:red;">*</span></label>
-                    <select id="groupSelect">
-                        <option value="">-- เลือกกลุ่มงานรับผลกระทบ --</option>
-                        <option value="Valve Body">Valve Body</option>
-                        <option value="IMV">IMV</option>
-                        <option value="non-IMV 1">non-IMV 1</option>
-                        <option value="non-IMV 2">non-IMV 2</option>
-                        <option value="NEW-B">NEW-B</option>
-                        <option value="Melting">Melting</option>
-                    </select>
+                    <label data-th="2. Group รับผลกระทบ (ระบบสืบค้นอัตโนมัติประจำไลน์)" data-en="2. Impact Group (Auto filled)">2. Group รับผลกระทบ (ระบบสืบค้นอัตโนมัติประจำไลน์)</label>
+                    <input type="text" id="groupSelect" disabled style="background:#f1f3f5; font-weight:bold; color:#d90429;">
                 </div>
 
                 <div class="form-group">
-                    <label>3. Model <span style="color:red;">*</span></label>
+                    <label>3. Model</label>
                     <select id="modelSelect"><option value="">-- กรุณาเลือกไลน์ก่อน --</option></select>
                 </div>
 
                 <div class="form-group">
                     <label>4. Die/Mold No. <span style="color:red;">*</span></label>
-                    <input type="text" id="dieNo" placeholder="กรอกหมายเลข Die / Mold">
+                    <input type="text" id="dieNo" placeholder="ระบุหมายเลขแม่พิมพ์ชิ้นงาน">
                 </div>
 
                 <div class="form-group">
-                    <label>5. Start Date/Time (24H Format) <span style="color:red;">*</span></label>
+                    <label data-th="5. เวลาเริ่มต้นเครื่องหยุดทำงาน" data-en="5. Start Downtime Date/Time">5. เวลาเริ่มต้นเครื่องหยุดทำงาน</label>
                     <div class="time-select-grid">
                         <input type="date" id="startDateRaw" onchange="calculateDuration()">
                         <select id="startHour" onchange="calculateDuration()"></select>
@@ -409,7 +362,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>6. End Date/Time (24H Format) <span style="color:red;">*</span></label>
+                    <label data-th="6. เวลาสิ้นสุดการซ่อม/ปรับแต่ง" data-en="6. End Recovery Date/Time">6. เวลาสิ้นสุดการซ่อม/ปรับแต่ง</label>
                     <div class="time-select-grid">
                         <input type="date" id="endDateRaw" onchange="calculateDuration()">
                         <select id="endHour" onchange="calculateDuration()"></select>
@@ -420,15 +373,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label>7. Hours & Shift</label>
+                    <label data-th="7. รวมชั่วโมงหยุด (ชั่วโมง) & Shift" data-en="7. Calculated Hours & Shift">7. รวมชั่วโมงหยุด (ชั่วโมง) & Shift</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="text" id="durationHours" disabled placeholder="ออโต้ชั่วโมง" style="flex: 2; background:#e9ecef;">
-                        <input type="text" id="shiftText" disabled placeholder="กะ" style="flex: 1; text-align: center; font-weight: bold; background: #fff9db;">
+                        <input type="text" id="durationHours" disabled style="flex: 2; background:#e9ecef; font-weight:bold; color:black;">
+                        <input type="text" id="shiftText" disabled style="flex: 1; text-align: center; font-weight: bold; background: #fff9db;">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>9. ผู้ส่งคำร้องบันทึกระบบ</label>
+                    <label data-th="9. ชื่อผู้ส่งคำร้องต้นเรื่อง" data-en="9. Request Initiator">9. ชื่อผู้ส่งคำร้องต้นเรื่อง</label>
                     <input type="text" id="requesterName" disabled style="background:#e9ecef; font-weight:bold;">
                 </div>
 
@@ -456,59 +409,66 @@
 
                 <div class="form-group full-width">
                     <label>11. Event Line Stop <span style="color:red;">*</span></label>
-                    <input type="text" id="eventLineStop" placeholder="ระบุรายละเอียดแผนงาน">
+                    <input type="text" id="eventLineStop" placeholder="ระบุรายละเอียดแผนงานทางวิศวกรรมและการจัดการหน้างาน">
                 </div>
 
                 <div class="form-group full-width">
                     <label>12. Objective <span style="color:red;">*</span></label>
-                    <textarea id="objective" rows="2" placeholder="ระบุวัตถุประสงค์ในการหยุดไลน์"></textarea>
+                    <textarea id="objective" rows="2" placeholder="ระบุจุดประสงค์การทำงานให้ชัดเจนเพื่อประโยชน์ต่อการสืบย้อนกลับ"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeModal('requestModal')">ยกเลิก</button>
-                <button class="btn-primary" onclick="saveRequest()"><i class="fa-solid fa-floppy-disk"></i> บันทึกคำร้อง</button>
+                <button class="btn-secondary" onclick="closeModal('requestModal')" data-th="ยกเลิก" data-en="Cancel">ยกเลิก</button>
+                <button class="btn-primary" onclick="saveRequest()"><i class="fa-solid fa-floppy-disk"></i> <span data-th="บันทึกข้อมูล" data-en="Commit Save">บันทึกข้อมูล</span></button>
             </div>
         </div>
     </div>
 
-    <!-- --- VIEW DETAIL MODAL --- -->
+    <!-- --- AUDIT TRAIL LOG MODAL --- -->
     <div class="modal" id="viewDetailModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>รายละเอียดแผนงาน & ประวัติการสอบกลับ (Audit Trail)</h3>
+                <h3 data-th="รายละเอียดหน้างาน & ประวัติการตรวจสอบย้อนกลับ (Audit Trail)" data-en="Operation Logging & Investigation History (Audit Trail)">รายละเอียดหน้างาน & ประวัติการตรวจสอบย้อนกลับ (Audit Trail)</h3>
                 <button class="close-modal" onclick="closeModal('viewDetailModal')">&times;</button>
             </div>
             <div class="modal-body" id="viewDetailsContainer" style="grid-template-columns: 1fr;"></div>
             <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeModal('viewDetailModal')">ปิดหน้าต่าง</button>
+                <button class="btn-secondary" onclick="closeModal('viewDetailModal')" data-th="ปิดหน้าต่าง" data-en="Dismiss Close">ปิดหน้าต่าง</button>
             </div>
         </div>
     </div>
 
-    <div class="toast" id="toastMessage">สำเร็จ</div>
+    <div class="toast" id="toastMessage">Success</div>
 
     <script>
+        let currentLang = "th";
         let userRole = "";
         let currentUserProfile = { name: "", id: "", group: "" };
         let isSystemOpen = true;
-        let currentActiveMonth = "2026-08"; // แอดมินเป็นคนตั้งค่าเริ่มต้น (ข้อมูลสำหรับเดือนหน้า)
+        let currentActiveMonth = "2026-08"; 
 
-        // โหลดข้อมูลระบบเปิดปิด
+        // โหลดข้อมูล Memory
         if (localStorage.getItem("isSystemOpen") !== null) isSystemOpen = localStorage.getItem("isSystemOpen") === "true";
         if (localStorage.getItem("currentActiveMonth") !== null) currentActiveMonth = localStorage.getItem("currentActiveMonth");
 
-        // โครงสร้าง Database
-        let requestsData = JSON.parse(localStorage.getItem("requestsData")) || [
-            {
-                monthYear: "2026-08", line: "DC01", group: "Valve Body", model: "UPR", dieNo: "DM-9901",
-                startDate: "2026-08-01 08:00", endDate: "2026-08-01 12:00", hours: "4.00", dn: "D",
-                mainRequest: "PE", requester: "ทดสอบ ระบบ", changePoint: "1. Machine modify",
-                eventLineStop: "ทดสอบเดินเครื่องใหม่หลังติดตั้งตู้ PLC", objective: "เช็กระบบเซฟตี้ทั่วไป",
-                timestamp: "2026-07-17 08:00:00",
-                operatorProfile: "ทดสอบ ระบบ (ID: 00000 ฝ่าย: PE)",
-                logs: ["สร้างรายการโดย: ทดสอบ ระบบ (ID: 00000 ฝ่าย: PE) เมื่อ 2026-07-17 08:00:00"]
-            }
-        ];
+        // Remember Me Data Loader
+        if (localStorage.getItem("rem_name")) {
+            document.getElementById("userRealName").value = localStorage.getItem("rem_name");
+            document.getElementById("userEmpId").value = localStorage.getItem("rem_id");
+            document.getElementById("userBelongGroup").value = localStorage.getItem("rem_group");
+            document.getElementById("rememberMeCheck").checked = true;
+        }
+
+        // Database
+        let requestsData = JSON.parse(localStorage.getItem("requestsData")) || [];
+
+        const lineGroupMapping = {
+            "DC01": "Valve Body", "DC02": "Valve Body", "DC03": "Valve Body",
+            "DC04": "IMV", "DC05": "IMV", "DC06": "non-IMV 1", "DC07": "non-IMV 1",
+            "DC08": "non-IMV 1", "DC09": "non-IMV 2", "DC10": "non-IMV 2",
+            "DC11": "NEW-B", "DC12": "NEW-B", "DC13": "IMV", "DC14": "IMV",
+            "HZ01": "Valve Body", "DS01": "Melting", "DS02": "Melting", "DS03": "Melting"
+        };
 
         const modelMapping = {
             "DC01": ["UPR"], "DC02": ["LWR"], "DC03": ["UPR", "LWR"],
@@ -519,56 +479,46 @@
             "HZ01": ["UPPER VALVE BODY"], "DS01": ["Melt-1"], "DS02": ["Melt-2"], "DS03": ["Melt-3"]
         };
 
-        // ตัวแปรเก็บกราฟเพื่อไม่ให้เกิดการสร้างซับซ้อน
         let barChartInstance = null;
         let pieChartInstance = null;
 
-        // --- REALTIME CLOCK ---
+        // REALTIME CLOCK
         setInterval(() => {
             document.getElementById("realtimeClock").textContent = new Date().toLocaleTimeString('th-TH', { hour12: false });
         }, 1000);
 
-        // --- INITIAL SETUP ---
         window.onload = () => {
             initMonthDropdowns();
             initHourDropdowns();
+            changeLanguage("th");
         };
 
         function initMonthDropdowns() {
             const adminMonth = document.getElementById("adminTargetMonth");
             const viewMonth = document.getElementById("viewMonthFilter");
-            adminMonth.innerHTML = "";
-            viewMonth.innerHTML = "";
-
+            adminMonth.innerHTML = ""; viewMonth.innerHTML = "";
             const now = new Date();
             let monthList = [];
-
-            // ย้อนหลัง 3 เดือน ถึง อนาคต 2 เดือน เพื่อสร้างประวัติบันทึกเก่า (Archive)
             for(let i = -3; i <= 2; i++) {
                 let tempDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
                 let y = tempDate.getFullYear();
                 let m = String(tempDate.getMonth() + 1).padStart(2, '0');
                 monthList.push({ value: `${y}-${m}`, text: tempDate.toLocaleDateString('th-TH', { year: 'numeric', month: 'long' }) });
             }
-
             monthList.forEach(m => {
                 adminMonth.add(new Option(m.text, m.value));
                 viewMonth.add(new Option(m.text, m.value));
             });
-
             adminMonth.value = currentActiveMonth;
-            // หน้าตารางทำงานปัจจุบันให้ตั้งค่าแสดงผลกรองตามเดือนที่แอดมินกำหนดเลือกเป็นหลัก
             viewMonth.value = currentActiveMonth;
             updateActiveMonthDisplay();
         }
 
         function initHourDropdowns() {
-            const sh = document.getElementById("startHour");
-            const eh = document.getElementById("endHour");
+            const sh = document.getElementById("startHour"); const eh = document.getElementById("endHour");
             for(let i=0; i<24; i++) {
                 let hh = String(i).padStart(2, '0');
-                sh.add(new Option(hh, hh));
-                eh.add(new Option(hh, hh));
+                sh.add(new Option(hh, hh)); eh.add(new Option(hh, hh));
             }
         }
 
@@ -577,69 +527,113 @@
             document.getElementById("activeSystemMonthDisplay").textContent = opt ? opt.text : currentActiveMonth;
         }
 
-        // --- LOGIN & PROFILE VERIFICATION ---
-        function verifyLogin() {
-            const pass = document.getElementById("sysPassword").value;
-            if (pass === "admin123") {
-                userRole = "admin";
-                document.getElementById("adminControlPanel").style.display = "flex";
-                goToProfileStep();
-            } else if (pass === "user123") {
-                userRole = "user";
-                document.getElementById("adminControlPanel").style.display = "none";
-                goToProfileStep();
-            } else {
-                alert("❌ รหัสผ่านไม่ถูกต้อง!");
+        // TABS NAVIGATION CONTROLLER
+        function switchTab(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            if (pageId === 'requestPage') document.getElementById('tabRequestBtn').classList.add('active');
+            if (pageId === 'dashboardPage') {
+                document.getElementById('tabDashBtn').classList.add('active');
+                triggerDashboardRender();
             }
         }
 
-        function goToProfileStep() {
-            document.getElementById("loginOverlay").style.display = "none";
-            document.getElementById("profileOverlay").style.display = "flex";
+        // LANGUAGE TRANSLATION ENGINE
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll("[data-th]").forEach(el => {
+                el.textContent = lang === "th" ? el.getAttribute("data-th") : el.getAttribute("data-en");
+            });
+            if(userRole) updateUserInfoTag();
+        }
+
+        // SYSTEM LOGIN ROUTER
+        function verifyLogin() {
+            const pass = document.getElementById("sysPassword").value;
+            if (pass === "admin2388") {
+                userRole = "admin";
+                document.getElementById("adminControlPanel").style.display = "flex";
+                document.getElementById("loginOverlay").style.display = "none";
+                document.getElementById("welcomeOverlay").style.display = "flex"; // เด้งหน้าต้อนรับ Kittinun สุดเท่
+            } else if (pass === "user123") {
+                userRole = "user";
+                document.getElementById("adminControlPanel").style.display = "none";
+                document.getElementById("loginOverlay").style.display = "none";
+                document.getElementById("profileOverlay").style.display = "flex";
+            } else {
+                alert("❌ Password Incorrect / รหัสผ่านไม่ถูกต้อง!");
+            }
+        }
+
+        function enterAdminDashboard() {
+            currentUserProfile = { name: "Kittinun (Admin)", id: "MASTER", group: "ATAC HQ" };
+            document.getElementById("welcomeOverlay").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+            updateUserInfoTag();
+            applySystemLockState();
+            renderTable();
         }
 
         function submitUserProfile() {
             const name = document.getElementById("userRealName").value.trim();
             const id = document.getElementById("userEmpId").value.trim();
-            const group = document.getElementById("userBelongGroup").value;
+            const group = document.getElementById("userBelongGroup").value.trim();
 
             if (!name || !id || !group) {
-                alert("❌ กรุณากรอกข้อมูลส่วนตัวให้ครบถ้วนเพื่อยืนยันประวัติการตรวจสอบย้อนกลับ!");
+                alert("❌ Please fill out all profiles / กรุณากรอกตัวตนพนักงานให้ครบ!");
                 return;
+            }
+
+            // เซฟค่าจำรหัสคอมพิวเตอร์ (Remember Me)
+            if (document.getElementById("rememberMeCheck").checked) {
+                localStorage.setItem("rem_name", name);
+                localStorage.setItem("rem_id", id);
+                localStorage.setItem("rem_group", group);
+            } else {
+                localStorage.removeItem("rem_name");
+                localStorage.removeItem("rem_id");
+                localStorage.removeItem("rem_group");
             }
 
             currentUserProfile = { name, id, group };
             document.getElementById("profileOverlay").style.display = "none";
             document.getElementById("mainApp").style.display = "block";
-
-            document.getElementById("userInfoTag").innerHTML = `
-                สิทธิ์: <strong>${userRole === 'admin' ? 'Admin' : 'User'}</strong><br>
-                ${name} (${id}) [${group}]
-            `;
-
+            updateUserInfoTag();
             applySystemLockState();
             renderTable();
         }
 
-        function handleLogout() {
-            userRole = "";
-            currentUserProfile = { name: "", id: "", group: "" };
-            document.getElementById("sysPassword").value = "";
-            document.getElementById("userRealName").value = "";
-            document.getElementById("userEmpId").value = "";
-            document.getElementById("userBelongGroup").value = "";
-            document.getElementById("loginOverlay").style.display = "flex";
-            document.getElementById("mainApp").style.display = "none";
+        function updateUserInfoTag() {
+            const nameLabel = currentLang === "th" ? "สิทธิ์:" : "Role:";
+            document.getElementById("userInfoTag").innerHTML = `
+                ${nameLabel} <strong>${userRole === 'admin' ? 'Admin' : 'User'}</strong><br>
+                ${currentUserProfile.name} (${currentUserProfile.id})
+            `;
         }
 
-        // --- ADMIN CONTROLS ---
+        function handleLogout() {
+            userRole = "";
+            document.getElementById("sysPassword").value = "";
+            if(!localStorage.getItem("rem_name")) {
+                document.getElementById("userRealName").value = "";
+                document.getElementById("userEmpId").value = "";
+                document.getElementById("userBelongGroup").value = "";
+            }
+            document.getElementById("loginOverlay").style.display = "flex";
+            document.getElementById("mainApp").style.display = "none";
+            switchTab('requestPage');
+        }
+
+        // CONTROL PERMISSIONS
         function adminChangeMonth(val) {
             currentActiveMonth = val;
             localStorage.setItem("currentActiveMonth", val);
             document.getElementById("viewMonthFilter").value = val;
             updateActiveMonthDisplay();
             renderTable();
-            showToast("เปลี่ยนรอบเดือนระบบเป็น " + val);
+            showToast("Admin cycle switched to " + val);
         }
 
         function toggleSystemOpen(status) {
@@ -647,7 +641,7 @@
             localStorage.setItem("isSystemOpen", status);
             applySystemLockState();
             renderTable();
-            showToast(status ? "เปิดระบบรับข้อมูลปกติ" : "ปิดรับคำร้องประจำเดือนแล้ว");
+            showToast(status ? "Portal opened" : "Portal locked");
         }
 
         function applySystemLockState() {
@@ -655,9 +649,7 @@
             const btnCreate = document.getElementById("btnCreateNew");
             const btnClose = document.getElementById("lockBtnClose");
             const btnOpen = document.getElementById("lockBtnOpen");
-
-            btnClose.className = "switch-btn";
-            btnOpen.className = "switch-btn";
+            btnClose.className = "switch-btn"; btnOpen.className = "switch-btn";
 
             if (isSystemOpen) {
                 banner.style.display = "none";
@@ -670,32 +662,21 @@
             }
         }
 
-        // --- DASHBOARD ANALYTICS LOGIC ---
-        function updateDashboard(filteredData) {
-            let totalHours = 0;
-            let lineCounts = {};
+        // CHARTS DASHBOARD LOGIC
+        function triggerDashboardRender() {
+            const selectedMonth = document.getElementById("viewMonthFilter").value;
+            let filtered = requestsData.filter(r => r.monthYear === selectedMonth);
+
             let reasonCounts = {};
             let groupHours = {};
 
-            filteredData.forEach(r => {
+            filtered.forEach(r => {
                 let h = parseFloat(r.hours) || 0;
-                totalHours += h;
-                lineCounts[r.line] = (lineCounts[r.line] || 0) + 1;
                 reasonCounts[r.mainRequest] = (reasonCounts[r.mainRequest] || 0) + 1;
                 groupHours[r.group] = (groupHours[r.group] || 0) + h;
             });
 
-            // อัปเดตการ์ดข้อมูล Widget
-            document.getElementById("dashTotalHours").textContent = totalHours.toFixed(2) + " ชม.";
-            document.getElementById("dashTotalCount").textContent = filteredData.length + " รายการ";
-
-            let topLine = Object.keys(lineCounts).reduce((a, b) => lineCounts[a] > lineCounts[b] ? a : b, "-");
-            let topReason = Object.keys(reasonCounts).reduce((a, b) => reasonCounts[a] > reasonCounts[b] ? a : b, "-");
-
-            document.getElementById("dashTopLine").textContent = topLine;
-            document.getElementById("dashTopReason").textContent = topReason;
-
-            // Render 📊 กราฟแท่งแยกตามกรุ๊ป
+            // กราฟแท่ง (Bar) แยกสะสมรายชั่วโมงกลุ่มงาน
             const barCtx = document.getElementById("groupBarChart").getContext("2d");
             if (barChartInstance) barChartInstance.destroy();
             barChartInstance = new Chart(barCtx, {
@@ -703,16 +684,16 @@
                 data: {
                     labels: Object.keys(groupHours),
                     datasets: [{
-                        label: 'ชั่วโมงหยุดสะสม',
+                        label: currentLang === 'th' ? 'รวมชั่วโมงหยุดสะสม (ชั่วโมง)' : 'Accumulated Hours (hrs)',
                         data: Object.values(groupHours),
                         backgroundColor: '#328cc1',
-                        borderRadius: 4
+                        borderRadius: 6
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // Render 🍕 กราฟวงกลมแยกสาเหตุ
+            // กราฟวงกลม (Pie) แจกแจงครั้งการเกิดปัญหา
             const pieCtx = document.getElementById("requestPieChart").getContext("2d");
             if (pieChartInstance) pieChartInstance.destroy();
             pieChartInstance = new Chart(pieCtx, {
@@ -728,7 +709,7 @@
             });
         }
 
-        // --- DURATION CALCULATOR (24H) ---
+        // COMPUTE TIME MATHEMATICS
         function calculateDuration() {
             const sd = document.getElementById("startDateRaw").value;
             const sh = document.getElementById("startHour").value;
@@ -742,7 +723,7 @@
             const end = new Date(`${ed}T${eh}:${em}:00`);
 
             if (end <= start) {
-                showToast("เวลาสิ้นสุดต้องมากกว่าเวลาเริ่มต้น!");
+                showToast("Error! End time must be over start time.");
                 document.getElementById("durationHours").value = "";
                 return;
             }
@@ -752,35 +733,63 @@
             document.getElementById("shiftText").value = (start.getHours() >= 8 && start.getHours() < 20) ? "D" : "N";
         }
 
-        // --- TABLE RENDER & FILTERS ---
+        function handleLineChange() {
+            const line = document.getElementById("lineSelect").value;
+            const groupInput = document.getElementById("groupSelect");
+            const mSelect = document.getElementById("modelSelect");
+            
+            // Auto group mapping ตามที่ตกลงกันไว้หน้างาน
+            groupInput.value = lineGroupMapping[line] || "";
+            
+            mSelect.innerHTML = "";
+            const models = modelMapping[line] || [];
+            if(models.length === 0) { mSelect.add(new Option("-", "")); }
+            else { models.forEach(m => mSelect.add(new Option(m, m))); }
+        }
+
+        // DATABASE RENDERER WITH LIVE SEARCH & SHIFT BADGES
         function renderTable() {
             const selectedMonth = document.getElementById("viewMonthFilter").value;
+            const query = document.getElementById("tableSearchBox").value.toLowerCase().trim();
             const tableBody = document.getElementById("requestTableBody");
             tableBody.innerHTML = "";
 
-            // กรองข้อมูลแยกรายเดือนและคลังเก่า (Archive Isolation)
-            let filteredData = requestsData.filter(r => r.monthYear === selectedMonth);
-            updateDashboard(filteredData);
+            let filtered = requestsData.filter(r => r.monthYear === selectedMonth);
 
-            filteredData.forEach((req, idx) => {
-                // ค้นหาดัชนีจริงใน Database ใหญ่
+            // Advanced Search Box Filter
+            if(query !== "") {
+                filtered = filtered.filter(r => 
+                    r.line.toLowerCase().includes(query) ||
+                    r.group.toLowerCase().includes(query) ||
+                    r.model.toLowerCase().includes(query) ||
+                    r.mainRequest.toLowerCase().includes(query) ||
+                    r.requester.toLowerCase().includes(query) ||
+                    r.dieNo.toLowerCase().includes(query)
+                );
+            }
+
+            filtered.forEach(req => {
                 let trueIndex = requestsData.findIndex(r => r === req);
                 let canEditDelete = (userRole === "admin" || (userRole === "user" && isSystemOpen && selectedMonth === currentActiveMonth));
+                
+                // Shift Color Badging Logic
+                let shiftClass = req.dn === "D" ? "badge-shift-d" : "badge-shift-n";
 
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td><span class="badge badge-line">${req.line}</span></td>
                     <td><strong>${req.group}</strong></td>
                     <td>${req.model || '-'}</td>
-                    <td><span class="badge" style="background:#eee;">${req.dn}</span></td>
+                    <td><code>${req.dieNo}</code></td>
+                    <td><span class="badge ${shiftClass}">${req.dn}</span></td>
                     <td>${req.startDate}</td>
                     <td><span class="badge badge-hours">${req.hours} ชม.</span></td>
-                    <td><strong>${req.mainRequest}</strong></td>
-                    <td>${req.requester}</td>
+                    <td><span style="font-weight:bold; color:var(--primary-color);">${req.mainRequest}</span></td>
+                    <td><small>${req.requester}</small></td>
                     <td class="action-btns" style="text-align:center;">
-                        <button class="btn-icon btn-view" onclick="viewDetails(${trueIndex})"><i class="fa-solid fa-eye"></i></button>
-                        <button class="btn-icon btn-edit" onclick="editRequest(${trueIndex})" ${canEditDelete ? '' : 'disabled'}><i class="fa-solid fa-pen"></i></button>
-                        <button class="btn-icon btn-delete" onclick="deleteRequest(${trueIndex})" ${canEditDelete ? '' : 'disabled'}><i class="fa-solid fa-trash"></i></button>
+                        <button class="btn-icon btn-view" onclick="viewDetails(${trueIndex})"><i class="fa-solid fa-list-check"></i></button>
+                        <button class="btn-icon btn-edit" onclick="editRequest(${trueIndex})" ${canEditDelete ? '' : 'disabled'}><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="btn-icon btn-delete" onclick="deleteRequest(${trueIndex})" ${canEditDelete ? '' : 'disabled'}><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -788,7 +797,7 @@
         }
 
         function openNewRequestModal() {
-            document.getElementById("modalTitle").textContent = "สร้างคำขอ Line Stop ใหม่ (ATAC)";
+            document.getElementById("modalTitle").textContent = currentLang === 'th' ? "สร้างคำขอ Line Stop ใหม่ (ATAC)" : "Create New ATAC Line Stop Entry";
             document.getElementById("editIndex").value = "";
             resetForm();
             document.getElementById("formMonthYear").value = currentActiveMonth;
@@ -814,55 +823,50 @@
             const eventLineStop = document.getElementById("eventLineStop").value.trim();
             const objective = document.getElementById("objective").value.trim();
 
-            if (!line || !group || !dieNo || !sd || !ed || !hours || !mainRequestActive || !changePointActive || !eventLineStop || !objective) {
-                alert("❌ กรุณากรอกข้อมูลที่จำเป็นทั้งหมด!");
+            if (!line || !dieNo || !sd || !ed || !hours || !mainRequestActive || !changePointActive || !eventLineStop || !objective) {
+                alert("❌ Missing fields! กรุณาระบุรายละเอียดให้ครบถ้วน");
                 return;
             }
 
             const formattedStart = `${sd} ${sh}:${sm}`;
             const formattedEnd = `${ed} ${eh}:${em}`;
             const nowStr = new Date().toLocaleString('th-TH', { hour12: false });
-            
-            // ข้อมูลประวัติการยืนยันตัวตนคนกดบันทึกจริง ณ วินาทีนั้น
-            const profileStamp = `${currentUserProfile.name} (ID: ${currentUserProfile.id} ฝ่าย: ${currentUserProfile.group})`;
+            const logProfileStamp = `${currentUserProfile.name} (ID: ${currentUserProfile.id} Dept: ${currentUserProfile.group})`;
 
             const editIndex = document.getElementById("editIndex").value;
             if (editIndex !== "") {
-                // EDIT LOGIC (บันทึก Audit Trail ระบุตัวตนจริงของคนกดแก้ไข)
+                // Dynamic Operator Audit Tracker
                 let old = requestsData[editIndex];
-                old.logs.push(`แก้ไขข้อมูลเมื่อ: ${nowStr} โดย ${profileStamp} (ปรับเปลี่ยนรายละเอียดแผนงาน)`);
-                
+                old.logs.push(`Edited by ${logProfileStamp} at ${nowStr}`);
                 requestsData[editIndex] = {
                     monthYear: old.monthYear, line, group, model, dieNo, startDate: formattedStart, endDate: formattedEnd, hours, dn,
                     mainRequest: mainRequestActive.value, requester: old.requester, changePoint: changePointActive.value, eventLineStop, objective,
-                    timestamp: old.timestamp, operatorProfile: old.operatorProfile, logs: old.logs
+                    timestamp: old.timestamp, logs: old.logs
                 };
             } else {
-                // NEW LOGIC
                 requestsData.push({
                     monthYear: currentActiveMonth, line, group, model, dieNo, startDate: formattedStart, endDate: formattedEnd, hours, dn,
                     mainRequest: mainRequestActive.value, requester: currentUserProfile.name, changePoint: changePointActive.value, eventLineStop, objective,
-                    timestamp: nowStr, operatorProfile: profileStamp,
-                    logs: [`สร้างคำขอตั้งต้นเมื่อ: ${nowStr} โดย ${profileStamp}`]
+                    timestamp: nowStr,
+                    logs: [`Created by ${logProfileStamp} at ${nowStr}`]
                 });
             }
 
             localStorage.setItem("requestsData", JSON.stringify(requestsData));
             closeModal("requestModal");
             renderTable();
-            showToast("บันทึกข้อมูลสำเร็จ");
+            showToast("Saved Successful");
         }
 
         function editRequest(index) {
             const req = requestsData[index];
-            document.getElementById("modalTitle").textContent = `แก้ไขคำร้อง (ID: ${index + 1})`;
+            document.getElementById("modalTitle").textContent = `Edit Entry ID: #${index + 1}`;
             document.getElementById("editIndex").value = index;
 
             document.getElementById("formMonthYear").value = req.monthYear;
             document.getElementById("lineSelect").value = req.line;
             handleLineChange();
 
-            document.getElementById("groupSelect").value = req.group;
             document.getElementById("modelSelect").value = req.model;
             document.getElementById("dieNo").value = req.dieNo;
 
@@ -889,40 +893,31 @@
         }
 
         function deleteRequest(index) {
-            if (confirm("คุณต้องการลบคำร้องหยุดไลน์การผลิตนี้ใช่หรือไม่?")) {
+            if (confirm("Confirm delete this Line Stop log? / คุณต้องการลบข้อมูลนี้ใช่หรือไม่?")) {
                 requestsData.splice(index, 1);
                 localStorage.setItem("requestsData", JSON.stringify(requestsData));
                 renderTable();
-                showToast("ลบข้อมูลสำเร็จ");
+                showToast("Deleted");
             }
         }
 
         function viewDetails(index) {
             const req = requestsData[index];
             const div = document.getElementById("viewDetailsContainer");
-            let logList = req.logs.map(l => `<li>${l}</li>`).join("");
+            let logsMarkup = req.logs.map(l => `<li><i class="fa-solid fa-clock-rotate-left"></i> ${l}</li>`).join("");
 
             div.innerHTML = `
-                <div class="detail-row"><div class="detail-label">รอบเดือนบันทึกข้อมูล:</div><div class="detail-value"><strong>${req.monthYear}</strong></div></div>
-                <div class="detail-row"><div class="detail-label">Line / Model:</div><div class="detail-value">${req.line} / ${req.model} (ชิ้นงาน Die No: ${req.dieNo})</div></div>
-                <div class="detail-row"><div class="detail-label">เวลาหยุดสะสม:</div><div class="detail-value">${req.startDate} ถึง ${req.endDate} (<strong>${req.hours} ชั่วโมง</strong> - กะ ${req.dn})</div></div>
-                <div class="detail-row"><div class="detail-label">รายละเอียดความเปลี่ยนแปลง:</div><div class="detail-value"><strong>${req.changePoint}</strong> - ${req.eventLineStop}</div></div>
-                <div class="detail-row"><div class="detail-label">ผู้ส่งคำร้องต้นเรื่อง:</div><div class="detail-value">${req.requester}</div></div>
-                <div class="detail-row" style="flex-direction:column; background:#fdfffe; padding:12px; border:1px dashed #ccc; border-radius:6px; margin-top:10px;">
-                    <div class="detail-label" style="width:100%; margin-bottom:8px;"><i class="fa-solid fa-fingerprint"></i> ประวัติการเข้าทำรายการย้อนกลับ (Audit Trail)</div>
-                    <ul style="padding-left:18px; font-size:12px; color:#555; line-height:1.8;">${logList}</ul>
+                <div class="detail-row"><div class="detail-label">Cycle Month:</div><div class="detail-value"><strong>${req.monthYear}</strong></div></div>
+                <div class="detail-row"><div class="detail-label">Line Manufacturing:</div><div class="detail-value">${req.line} / Model: ${req.model} (Die Mold: ${req.dieNo})</div></div>
+                <div class="detail-row"><div class="detail-label">Downtime Span:</div><div class="detail-value">${req.startDate} ~ ${req.endDate} (<strong>${req.hours} Hours</strong> [Shift ${req.dn}])</div></div>
+                <div class="detail-row"><div class="detail-label">Engineering Details:</div><div class="detail-value"><strong>${req.changePoint}</strong> - ${req.eventLineStop}</div></div>
+                <div class="detail-row"><div class="detail-label">Original Sender:</div><div class="detail-value">${req.requester}</div></div>
+                <div class="detail-row" style="flex-direction:column; background:#f8f9fa; padding:15px; border:1px dashed var(--primary-light); border-radius:8px; margin-top:10px;">
+                    <div class="detail-label" style="width:100%; margin-bottom:10px; color:var(--primary-color);"><i class="fa-solid fa-fingerprint"></i> System Dynamic Audit Trail History</div>
+                    <ul style="padding-left:15px; font-size:12.5px; color:#444; list-style:none; display:flex; flex-direction:column; gap:6px;">${logsMarkup}</ul>
                 </div>
             `;
             document.getElementById("viewDetailModal").style.display = "flex";
-        }
-
-        function handleLineChange() {
-            const line = document.getElementById("lineSelect").value;
-            const mSelect = document.getElementById("modelSelect");
-            mSelect.innerHTML = "";
-            const models = modelMapping[line] || [];
-            if(models.length === 0) { mSelect.add(new Option("-ไม่มีโมเดล-", "")); }
-            else { models.forEach(m => mSelect.add(new Option(m, m))); }
         }
 
         function setRadio(name, val) {
@@ -930,7 +925,7 @@
         }
 
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
-        function showToast(msg) { const t = document.getElementById("toastMessage"); t.textContent = msg; t.style.display = "block"; setTimeout(() => t.style.display="none", 2500); }
+        function showToast(msg) { const t = document.getElementById("toastMessage"); t.textContent = msg; t.style.display = "block"; setTimeout(() => t.style.display="none", 2000); }
         
         function resetForm() {
             document.getElementById("lineSelect").value = "";
@@ -948,14 +943,14 @@
         }
 
         function exportToExcelCSV() {
-            let csv = "\uFEFFรอบเดือน,Line,Group,Model,Die No,Start,End,Hours,Shift,Main Request,ผู้บันทึกระบบ\n";
+            let csv = "\uFEFFCycle,Line,Group,Model,Die No,Start,End,Hours,Shift,Main Request,Sender\n";
             requestsData.forEach(r => {
                 csv += `"${r.monthYear}","${r.line}","${r.group}","${r.model}","${r.dieNo}","${r.startDate}","${r.endDate}","${r.hours}","${r.dn}","${r.mainRequest}","${r.requester}"\n`;
             });
             const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = `ATAC_LineStop_Report_${document.getElementById("viewMonthFilter").value}.csv`;
+            link.download = `ATAC_DowntimeLog_Export.csv`;
             link.click();
         }
     </script>
