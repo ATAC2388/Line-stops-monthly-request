@@ -90,7 +90,7 @@
         
         .controls-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; width: 100%; justify-content: space-between; margin-bottom: 15px; }
         
-        /* FIX: เอาไอคอนแว่นขยายออก และปรับ Padding ด้านซ้ายกล่องค้นหาให้เท่ากัน */
+        /* SEARCH BOX (NO ICON) */
         .search-box { position: relative; width: 300px; }
         .search-box input { width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: var(--font-th); font-size: 14px; }
 
@@ -146,7 +146,7 @@
 </head>
 <body>
 
-    <!-- --- 1. DOCK STEP 1: LOGIN SECURITY --- -->
+    <!-- --- 1. LOGIN SECURITY --- -->
     <div id="loginOverlay" class="overlay-screen">
         <div class="login-card">
             <i class="fa-solid fa-lock-open"></i>
@@ -157,7 +157,7 @@
         </div>
     </div>
 
-    <!-- --- 2. DOCK STEP 2: USER PROFILE REGISTRATION --- -->
+    <!-- --- 2. USER PROFILE REGISTRATION --- -->
     <div id="profileOverlay" class="overlay-screen" style="display: none;">
         <div class="login-card" style="max-width: 480px;">
             <i class="fa-solid fa-user-shield" style="color: var(--primary-light);"></i>
@@ -182,7 +182,7 @@
         </div>
     </div>
 
-    <!-- --- 3. DOCK STEP 2.5: WELCOME KITTINUN --- -->
+    <!-- --- 3. WELCOME KITTINUN --- -->
     <div id="welcomeOverlay" class="overlay-screen" style="display: none;">
         <div class="login-card" style="background: #061f30; border: 2px solid var(--accent-color); max-width: 500px;">
             <i class="fa-solid fa-crown" style="color: var(--accent-color); font-size:60px; margin-bottom:20px;"></i>
@@ -192,7 +192,7 @@
         </div>
     </div>
 
-    <!-- --- 4. MAIN APPLICATION APPLICATION --- -->
+    <!-- --- 4. MAIN APPLICATION --- -->
     <div id="mainApp">
         <div class="status-banner" id="lockStatusBanner">
             <i class="fa-solid fa-circle-exclamation fa-lg"></i>
@@ -229,7 +229,7 @@
         </div>
 
         <div class="container">
-            <!-- ADMIN CONTROL PANEL BUTTONS -->
+            <!-- ADMIN CONTROL PANEL -->
             <div class="admin-panel" id="adminControlPanel">
                 <div style="color: #856404; font-weight: bold;"><i class="fa-solid fa-gears"></i> Admin System Controls (รอบแอดมิน Kittinun)</div>
                 <div style="display: flex; align-items: center; gap: 15px;">
@@ -249,7 +249,6 @@
                         <h2 data-th="รายการคำร้องขออนุมัติหยุดไลน์ผลิต" data-en="Production Line Stop Log List">รายการคำร้องขออนุมัติหยุดไลน์ผลิต</h2>
                     </div>
                     <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                        <!-- FIX: เอาไอคอนแว่นขยายทิ้ง คลีนๆ ไม่ทับตัวหนังสือแน่นอน -->
                         <div class="search-box">
                             <input type="text" id="tableSearchBox" onkeyup="renderTable()" placeholder="ค้นหาข้อมูลด่วน / Live Search...">
                         </div>
@@ -285,7 +284,7 @@
                 </div>
             </div>
 
-            <!-- --- PAGE 2: ANALYTICS DASHBOARD (CHARTS ONLY) --- -->
+            <!-- --- PAGE 2: ANALYTICS DASHBOARD --- -->
             <div id="dashboardPage" class="page-content">
                 <div class="board-header">
                     <div class="board-title">
@@ -473,13 +472,26 @@
             "DS01": "Melting", "DS02": "Melting", "DS03": "Melting"
         };
 
+        // ข้อมูลโมเดลชุดใหม่แบบอัปเดตครบถ้วนตามความต้องการจริง
         const modelMapping = {
-            "DC01": ["UPR"], "DC02": ["LWR"], "DC03": ["UPR", "LWR"],
-            "DC04": ["NR [926F]", "NR [889F]"], "DC05": ["ZR", "ZR-HV"],
-            "DC06": ["GD (ECI)"], "DC07": ["GD (ECI)"], "DC08": ["GD (ECI)"],
-            "DC09": ["1 TR", "2 TR"], "DC10": ["1 TR"], "DC11": ["New-B"],
-            "DC12": ["New-B"], "DC13": ["ZR", "new ZR"], "DC14": ["NR [889F]"],
-            "HZ01": ["UPPER VALVE BODY"], "DS01": ["Melt-1"], "DS02": ["Melt-2"], "DS03": ["Melt-3"]
+            "DC01": ["UPR"], 
+            "DC02": ["LWR"], 
+            "DC03": ["UPR", "LWR"],
+            "DC04": ["NR [926F]", "NR [889F]", "CC ES01"], 
+            "DC05": ["ZR", "ZR-HV", "D41E", "D41E (ECI)", "D13E", "EFC", "EL-L"],
+            "DC06": ["GD (ECI)", "076E (ECI)"], 
+            "DC07": ["GD (ECI)", "076E (ECI)"], 
+            "DC08": ["GD (ECI)", "076E"],
+            "DC09": ["1 TR (863F)", "2 TR (864F)", "GD (ECI)", "6G4A", "THS-374"], 
+            "DC10": ["1  TR (863F)", "2 TR (864F)"], 
+            "DC11": ["New-B"],
+            "DC12": ["New-B"], 
+            "DC13": ["ZR", "new ZR", "ZR CNG", "NR [889F]", "D83F"], 
+            "DC14": ["NR [889F]", "NR [921F]", "new ZR", "TCC 3ZR", "NR [926F]"],
+            "HZ01": ["UPPER VALVE BODY", "LOWER VALVE BODY"], 
+            "DS01": ["Melt-1"], 
+            "DS02": ["Melt-2"], 
+            "DS03": ["Melt-3"]
         };
 
         let barChartInstance = null;
