@@ -140,6 +140,20 @@
         .detail-label { width: 35%; font-weight: 600; color: var(--primary-color); }
         .detail-value { width: 65%; }
 
+        /* CHECKLIST TABLES (Yes / No) */
+        .checklist-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .checklist-table th, .checklist-table td { padding: 8px 12px; border: 1px solid var(--border-color); font-size: 13px; text-align: center; }
+        .checklist-table th { background-color: #f1f3f5; color: var(--primary-color); }
+        .checklist-table td:first-child { text-align: left; font-weight: 600; }
+        .checklist-radio-label { display: flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
+
+        /* FILE UPLOADER STYLE */
+        .file-upload-wrapper { border: 2px dashed var(--border-color); padding: 15px; border-radius: 6px; text-align: center; background: #fafafa; cursor: pointer; position: relative; }
+        .file-upload-wrapper:hover { border-color: var(--primary-light); background: #f1f7fc; }
+        .file-upload-wrapper i { font-size: 28px; color: var(--text-muted); margin-bottom: 8px; }
+        .file-upload-wrapper p { font-size: 12.5px; color: var(--text-muted); }
+        .file-upload-wrapper input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
         .status-banner { display: none; background-color: #f8d7da; color: #721c24; padding: 12px 30px; border-bottom: 1px solid #f5c6cb; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; }
         .toast { position: fixed; bottom: 20px; right: 20px; background-color: #333; color: white; padding: 12px 24px; border-radius: 6px; z-index: 2000; display: none; }
     </style>
@@ -416,6 +430,69 @@
                     <label>12. Objective <span style="color:red;">*</span></label>
                     <textarea id="objective" rows="2" placeholder="ทำไปเพื่ออะไร (เช่น ซ่อมแซมเครื่อง, เปลี่ยนโมลด์เตรียมผลิตงานใหม่, แก้ไขปัญหาชิ้นงานเสีย)"></textarea>
                 </div>
+
+                <!-- --- ข้อ 13: CHECKLIST TABLE (YES / NO) --- -->
+                <div class="form-group full-width">
+                    <label>13. Support & Quality Checklist <span style="color:red;">*</span></label>
+                    <table class="checklist-table">
+                        <thead>
+                            <tr>
+                                <th>รายการคำขอซัพพอร์ต / แผนกที่เกี่ยวข้อง</th>
+                                <th style="width: 80px;">YES</th>
+                                <th style="width: 80px;">NO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MFD Sub-Leader</td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_mfdSub" value="YES"> Yes</label></td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_mfdSub" value="NO" checked> No</label></td>
+                            </tr>
+                            <tr>
+                                <td>MFD Operator Support</td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_mfdOp" value="YES"> Yes</label></td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_mfdOp" value="NO" checked> No</label></td>
+                            </tr>
+                            <tr>
+                                <td>DMT Support</td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_dmt" value="YES"> Yes</label></td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_dmt" value="NO" checked> No</label></td>
+                            </tr>
+                            <tr>
+                                <td>MT-DC Support</td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_mtdc" value="YES"> Yes</label></td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_mtdc" value="NO" checked> No</label></td>
+                            </tr>
+                            <tr>
+                                <td>QA Evaluation</td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_qa" value="YES"> Yes</label></td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_qa" value="NO" checked> No</label></td>
+                            </tr>
+                            <tr>
+                                <td>PCR Concern</td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_pcr" value="YES"> Yes</label></td>
+                                <td><label class="checklist-radio-label"><input type="radio" name="chk_pcr" value="NO" checked> No</label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- --- ข้อ 14: ATTACHMENT (MOCKUP) --- -->
+                <div class="form-group full-width">
+                    <label>14. Attachment (แนบไฟล์รูปภาพ / เอกสารที่เกี่ยวข้อง)</label>
+                    <div class="file-upload-wrapper">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p id="fileNameDisplay">ลากไฟล์มาวางที่นี่ หรือ คลิกเพื่อเลือกไฟล์เพื่อแนบเข้าระบบ (หลอก)</p>
+                        <input type="file" id="mockFileAttach" onchange="handleFileSelected(this)">
+                    </div>
+                </div>
+
+                <!-- --- ข้อ 15: USER COMMENT --- -->
+                <div class="form-group full-width">
+                    <label>15. Comment (ความคิดเห็น / ข้อมูลเพิ่มเติมจากผู้ส่งคำร้อง)</label>
+                    <textarea id="userComment" rows="2" placeholder="กรอกข้อความหรือข้อบันทึกอื่นๆ เพิ่มเติมเพื่อแจ้งทีมงานผู้ตรวจประเมิน"></textarea>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button class="btn-secondary" onclick="closeModal('requestModal')" data-th="ยกเลิก" data-en="Cancel">ยกเลิก</button>
@@ -758,6 +835,16 @@
             else { models.forEach(m => mSelect.add(new Option(m, m))); }
         }
 
+        // FILE SELECTION MOCK
+        function handleFileSelected(input) {
+            const display = document.getElementById("fileNameDisplay");
+            if (input.files && input.files.length > 0) {
+                display.innerHTML = `<span style="color: var(--success-color); font-weight: bold;"><i class="fa-solid fa-file-circle-check"></i> เตรียมแนบไฟล์: ${input.files[0].name} (ระบบเก็บตำแหน่งไฟล์ไว้เรียบร้อย)</span>`;
+            } else {
+                display.textContent = "ลากไฟล์มาวางที่นี่ หรือ คลิกเพื่อเลือกไฟล์เพื่อแนบเข้าระบบ (หลอก)";
+            }
+        }
+
         // DATABASE RENDERER WITH LIVE SEARCH & SHIFT BADGES
         function renderTable() {
             const selectedMonth = document.getElementById("viewMonthFilter").value;
@@ -832,6 +919,21 @@
             const changePointActive = document.querySelector('input[name="changePoint"]:checked');
             const eventLineStop = document.getElementById("eventLineStop").value.trim();
             const objective = document.getElementById("objective").value.trim();
+            
+            // ดึงค่า Checklist ย้อนกลับ
+            const supportChecklist = {
+                mfdSub: document.querySelector('input[name="chk_mfdSub"]:checked').value,
+                mfdOp: document.querySelector('input[name="chk_mfdOp"]:checked').value,
+                dmt: document.querySelector('input[name="chk_dmt"]:checked').value,
+                mtdc: document.querySelector('input[name="chk_mtdc"]:checked').value,
+                qa: document.querySelector('input[name="chk_qa"]:checked').value,
+                pcr: document.querySelector('input[name="chk_pcr"]:checked').value,
+            };
+
+            // ดึงข้อมูลแนบไฟล์หลอกและคอมเมนต์ผู้ใช้
+            const fileInput = document.getElementById("mockFileAttach");
+            const attachmentName = fileInput.files && fileInput.files.length > 0 ? fileInput.files[0].name : "No file attached";
+            const userComment = document.getElementById("userComment").value.trim();
 
             if (!line || !dieNo || !sd || !ed || !hours || !mainRequestActive || !changePointActive || !eventLineStop || !objective) {
                 alert("❌ Missing fields! กรุณาระบุรายละเอียดให้ครบถ้วน");
@@ -850,12 +952,14 @@
                 requestsData[editIndex] = {
                     monthYear: old.monthYear, line, group, model, dieNo, startDate: formattedStart, endDate: formattedEnd, hours, dn,
                     mainRequest: mainRequestActive.value, requester: old.requester, changePoint: changePointActive.value, eventLineStop, objective,
+                    checklist: supportChecklist, attachment: attachmentName, comment: userComment,
                     timestamp: old.timestamp, logs: old.logs
                 };
             } else {
                 requestsData.push({
                     monthYear: currentActiveMonth, line, group, model, dieNo, startDate: formattedStart, endDate: formattedEnd, hours, dn,
                     mainRequest: mainRequestActive.value, requester: currentUserProfile.name, changePoint: changePointActive.value, eventLineStop, objective,
+                    checklist: supportChecklist, attachment: attachmentName, comment: userComment,
                     timestamp: nowStr,
                     logs: [`Created by ${logProfileStamp} at ${nowStr}`]
                 });
@@ -898,6 +1002,34 @@
             document.getElementById("eventLineStop").value = req.eventLineStop;
             document.getElementById("objective").value = req.objective;
 
+            // คืนค่า Checklist กลับไปที่ฟอร์ม
+            if (req.checklist) {
+                setRadio("chk_mfdSub", req.checklist.mfdSub);
+                setRadio("chk_mfdOp", req.checklist.mfdOp);
+                setRadio("chk_dmt", req.checklist.dmt);
+                setRadio("chk_mtdc", req.checklist.mtdc);
+                setRadio("chk_qa", req.checklist.qa);
+                setRadio("chk_pcr", req.checklist.pcr);
+            } else {
+                setRadio("chk_mfdSub", "NO");
+                setRadio("chk_mfdOp", "NO");
+                setRadio("chk_dmt", "NO");
+                setRadio("chk_mtdc", "NO");
+                setRadio("chk_qa", "NO");
+                setRadio("chk_pcr", "NO");
+            }
+
+            // คืนค่าการแนบไฟล์
+            const display = document.getElementById("fileNameDisplay");
+            if(req.attachment && req.attachment !== "No file attached") {
+                display.innerHTML = `<span style="color: var(--success-color);"><i class="fa-solid fa-file"></i> ไฟล์ที่เคยแนบไว้: ${req.attachment}</span>`;
+            } else {
+                display.textContent = "ลากไฟล์มาวางที่นี่ หรือ คลิกเพื่อเลือกไฟล์เพื่อแนบเข้าระบบ (หลอก)";
+            }
+            
+            // คืนค่า Comment
+            document.getElementById("userComment").value = req.comment || "";
+
             document.getElementById("requestModal").style.display = "flex";
         }
 
@@ -915,12 +1047,31 @@
             const div = document.getElementById("viewDetailsContainer");
             let logsMarkup = req.logs.map(l => `<li><i class="fa-solid fa-clock-rotate-left"></i> ${l}</li>`).join("");
 
+            // ดึงข้อมูลเช็คลิสต์แสดงผล
+            const chk = req.checklist || { mfdSub: "NO", mfdOp: "NO", dmt: "NO", mtdc: "NO", qa: "NO", pcr: "NO" };
+            
             div.innerHTML = `
                 <div class="detail-row"><div class="detail-label">Cycle Month:</div><div class="detail-value"><strong>${req.monthYear}</strong></div></div>
                 <div class="detail-row"><div class="detail-label">Line Manufacturing:</div><div class="detail-value">${req.line} / Model: ${req.model} (Die Mold: ${req.dieNo})</div></div>
                 <div class="detail-row"><div class="detail-label">Downtime Span:</div><div class="detail-value">${req.startDate} ~ ${req.endDate} (<strong>${req.hours} Hours</strong> [Shift ${req.dn}])</div></div>
                 <div class="detail-row"><div class="detail-label">Details:</div><div class="detail-value"><strong>${req.changePoint}</strong> - ${req.eventLineStop}</div></div>
                 <div class="detail-row"><div class="detail-label">Objective:</div><div class="detail-value">${req.objective}</div></div>
+                
+                <div class="detail-row" style="flex-direction:column; background:#fdfdfe; border:1px solid #ddd; padding:12px; border-radius:8px; margin-top:8px;">
+                    <div class="detail-label" style="width:100%; margin-bottom:8px; color:var(--primary-color);"><i class="fa-solid fa-square-poll-horizontal"></i> Support & Quality checklist Result:</div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12.5px;">
+                        <div>• MFD Sub-Leader: <strong style="color:${chk.mfdSub === 'YES'?'green':'red'}">${chk.mfdSub}</strong></div>
+                        <div>• MFD Operator Support: <strong style="color:${chk.mfdOp === 'YES'?'green':'red'}">${chk.mfdOp}</strong></div>
+                        <div>• DMT Support: <strong style="color:${chk.dmt === 'YES'?'green':'red'}">${chk.dmt}</strong></div>
+                        <div>• MT-DC Support: <strong style="color:${chk.mtdc === 'YES'?'green':'red'}">${chk.mtdc}</strong></div>
+                        <div>• QA Evaluation: <strong style="color:${chk.qa === 'YES'?'green':'red'}">${chk.qa}</strong></div>
+                        <div>• PCR Concern: <strong style="color:${chk.pcr === 'YES'?'green':'red'}">${chk.pcr}</strong></div>
+                    </div>
+                </div>
+
+                <div class="detail-row"><div class="detail-label"><i class="fa-solid fa-paperclip"></i> Attachment:</div><div class="detail-value"><code>${req.attachment || 'No file attached'}</code></div></div>
+                <div class="detail-row"><div class="detail-label"><i class="fa-solid fa-comment-dots"></i> User Comment:</div><div class="detail-value" style="font-style:italic; color:#444;">"${req.comment || 'ไม่มีความเห็นเพิ่มเติม'}"</div></div>
+                
                 <div class="detail-row"><div class="detail-label">Original Sender:</div><div class="detail-value">${req.requester}</div></div>
                 <div class="detail-row" style="flex-direction:column; background:#f8f9fa; padding:15px; border:1px dashed var(--primary-light); border-radius:8px; margin-top:10px;">
                     <div class="detail-label" style="width:100%; margin-bottom:10px; color:var(--primary-color);"><i class="fa-solid fa-fingerprint"></i> System Dynamic Audit Trail History</div>
@@ -950,13 +1101,26 @@
             document.getElementById("objective").value = "";
             document.getElementsByName("mainRequest").forEach(r => r.checked = false);
             document.getElementsByName("changePoint").forEach(r => r.checked = false);
+
+            // รีเซ็ต Checklist เป็น NO ทั้งหมด
+            setRadio("chk_mfdSub", "NO");
+            setRadio("chk_mfdOp", "NO");
+            setRadio("chk_dmt", "NO");
+            setRadio("chk_mtdc", "NO");
+            setRadio("chk_qa", "NO");
+            setRadio("chk_pcr", "NO");
+
+            // รีเซ็ตแนบไฟล์หลอกและ Comment
+            document.getElementById("mockFileAttach").value = "";
+            document.getElementById("fileNameDisplay").textContent = "ลากไฟล์มาวางที่นี่ หรือ คลิกเพื่อเลือกไฟล์เพื่อแนบเข้าระบบ (หลอก)";
+            document.getElementById("userComment").value = "";
         }
 
         // CSV Export Engine
         function exportToExcelCSV() {
-            let csv = "\uFEFFCycle,Line,Group,Model,Die No,Start,End,Hours,Shift,Main Request,Sender\n";
+            let csv = "\uFEFFCycle,Line,Group,Model,Die No,Start,End,Hours,Shift,Main Request,Sender,Comment\n";
             requestsData.forEach(r => {
-                csv += `"${r.monthYear}","${r.line}","${r.group}","${r.model}","${r.dieNo}","${r.startDate}","${r.endDate}","${r.hours}","${r.dn}","${r.mainRequest}","${r.requester}"\n`;
+                csv += `"${r.monthYear}","${r.line}","${r.group}","${r.model}","${r.dieNo}","${r.startDate}","${r.endDate}","${r.hours}","${r.dn}","${r.mainRequest}","${r.requester}","${r.comment || ''}"\n`;
             });
             const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
             const link = document.createElement("a");
