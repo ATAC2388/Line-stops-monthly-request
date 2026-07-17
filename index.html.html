@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Stop Monthly Request</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #002d62; 
+            --primary-light: #004085;
+            --accent-color: #007bff;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --font-en: 'Inter', sans-serif;
+            --font-th: 'Anuphan', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-en), var(--font-th), sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            padding-bottom: 60px;
+        }
+
+        /* --- LOGIN SCREEN --- */
+        #loginOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #002d62 0%, #00091a 100%);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-card i { font-size: 50px; color: var(--primary-color); margin-bottom: 15px; }
+        .login-card h2 { font-size: 22px; color: var(--primary-color); margin-bottom: 8px; }
+        .login-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+        .login-card input {
+            width: 100%; padding: 12px; border: 1px solid var(--border-color);
+            border-radius: 8px; margin-bottom: 16px; font-size: 16px;
+            text-align: center; letter-spacing: 2px;
+        }
+
+        .login-card button {
+            width: 100%; padding: 12px; background-color: var(--primary-color);
+            color: white; border: none; border-radius: 8px; font-family: var(--font-th);
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+
+        .login-card button:hover { background-color: var(--primary-light); }
+
+        /* --- MAIN SYSTEM LAYOUT --- */
+        #mainApp { display: none; }
+
+        header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-area h1 { font-size: 20px; font-weight: 700; }
+
+        .user-status-area { display: flex; align-items: center; gap: 15px; }
+        .user-badge { background-color: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
+        
+        .btn-logout {
+            background: none; border: 1px solid rgba(255,255,255,0.4); color: white;
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px;
+            font-family: var(--font-th); transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255,255,255,0.1); }
+
+        /* --- REALTIME CLOCK & LOCK BANNER --- */
+        .system-bar {
+            background-color: #e9ecef;
+            padding: 8px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .clock-display { font-weight: bold; color: var(--primary-color); }
+
+        .status-banner {
+            display: none; background-color: #f8d7da; color: #721c24;
+            padding: 12px 30px; border-bottom: 1px solid #f5c6cb;
+            align-items: center; gap: 12px; font-weight: 600; font-size: 14px;
+        }
+
+        /* --- ADMIN PANEL --- */
+        .admin-control-panel {
+            display: none; background-color: #fff3cd; border: 1px solid #ffeeba;
+            padding: 15px; border-radius: 8px; margin-bottom: 20px;
+            align-items: center; justify-content: space-between;
+        }
+
+        .admin-control-title { color: #856404; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+
+        .container { max-width: 1250px; margin: 30px auto; padding: 0 20px; }
+        
+        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .board-title h2 { font-size: 22px; color: var(--primary-color); }
+        .board-title p { font-size: 14px; color: var(--text-muted); }
+        .header-actions { display: flex; gap: 12px; }
+
+        .btn-primary {
+            background-color: var(--primary-color); color: #ffffff; border: none;
+            padding: 10px 20px; border-radius: 6px; font-family: var(--font-th);
+            font-weight: 600; font-size: 14.5px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-primary:hover:not(:disabled) { background-color: var(--primary-light); }
+        .btn-primary:disabled { background-color: #ccc; cursor: not-allowed; opacity: 0.7; }
+
+        .btn-success {
+            background-color: var(--success-color); color: #ffffff; border: none;
+            padding: 10px 20px; border-radius: 6px; font-family: var(--font-th);
+            font-weight: 600; font-size: 14.5px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+        }
+
+        /* --- TABLES & BADGES --- */
+        .card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border-color); overflow: hidden; }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background-color: #f8f9fa; color: var(--primary-color); font-weight: 600; padding: 14px 16px; border-bottom: 2px solid var(--border-color); font-size: 13.5px; }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); font-size: 13.5px; vertical-align: middle; }
+        tr:hover { background-color: #fdfdfd; }
+
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        .badge-line { background-color: #e2f0fd; color: #004085; }
+        .badge-group { background-color: #e2f7ed; color: #155724; }
+        .badge-model { background-color: #fff3cd; color: #856404; }
+        .badge-hours { background-color: #f8d7da; color: #721c24; }
+        .badge-dn { background-color: #e9ecef; color: #495057; border: 1px solid var(--border-color); }
+
+        .action-btns { display: flex; gap: 6px; }
+        .btn-icon { border: none; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
+        .btn-view { background-color: #e8f0fe; color: #1a73e8; }
+        .btn-edit { background-color: #fff3cd; color: #856404; }
+        .btn-edit:disabled { opacity: 0.3; cursor: not-allowed; }
+        .btn-delete { background-color: #f8d7da; color: #721c24; }
+        .btn-delete:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* --- SWITCH BUTTONS --- */
+        .switch-container { display: flex; background: #e9ecef; border-radius: 20px; padding: 2px; width: 100px; }
+        .switch-btn { flex: 1; text-align: center; padding: 4px 0; font-size: 11px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-radius: 15px; }
+        .switch-btn.active-no { background-color: var(--danger-color); color: white; }
+        .switch-btn.active-yes { background-color: var(--success-color); color: white; }
+
+        /* --- MODALS --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 20px; }
+        .modal-content { background-color: var(--card-bg); border-radius: 12px; width: 100%; max-width: 850px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-header { padding: 20px; border-bottom: 1px solid var(--border-color); background-color: var(--primary-color); color: white; border-top-left-radius: 12px; border-top-right-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .close-modal { background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
+        .modal-body { padding: 24px; overflow-y: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .modal-body-view { grid-template-columns: 1fr; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full-width { grid-column: span 2; }
+        label { font-size: 13.5px; font-weight: 600; color: var(--primary-color); }
+        label span.required { color: var(--danger-color); }
+        input[type="text"], select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: var(--font-th); font-size: 14px; background-color: #fafafa; }
+        
+        /* 24-Hour No AM/PM Time Layout */
+        .time-select-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
+
+        .radio-group { display: flex; flex-wrap: wrap; gap: 12px; background: #fafafa; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; }
+        .radio-item { display: flex; align-items: center; gap: 6px; font-size: 13.5px; cursor: pointer; }
+        .toggle-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background: #f8f9fa; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .toggle-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; background-color: #f8f9fa; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
+        .btn-secondary { background-color: #e2e6ea; color: #495057; border: none; padding: 10px 20px; border-radius: 6px; font-family: var(--font-th); font-weight: 600; cursor: pointer; }
+        
+        .detail-row { display: flex; border-bottom: 1px solid #f1f1f1; padding: 10px 0; }
+        .detail-label { width: 35%; font-weight: 600; color: var(--primary-color); }
+        .detail-value { width: 65%; }
+
+        .toast { position: fixed; bottom: 20px; right: 20px; background-color: #333; color: white; padding: 12px 24px; border-radius: 6px; z-index: 2000; display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- --- 1. LOGIN SCREEN --- -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <i class="fa-solid fa-lock"></i>
+            <h2>กรุณาใส่รหัสผ่านเพื่อเข้าใช้งาน</h2>
+            <p>Line Stop Monthly Request System</p>
+            <input type="password" id="sysPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') verifyLogin()">
+            <button onclick="verifyLogin()">เข้าสู่ระบบ <i class="fa-solid fa-right-to-bracket"></i></button>
+        </div>
+    </div>
+
+    <!-- --- 2. MAIN APPLICATION --- -->
+    <div id="mainApp">
+        <!-- แถบแจ้งเตือนแดงเมื่อระบบปิดรับคำร้อง -->
+        <div class="status-banner" id="lockStatusBanner">
+            <i class="fa-solid fa-circle-exclamation fa-lg"></i>
+            <span><strong>[ประกาศ]</strong> ขณะนี้ระบบปิดรับคำร้องชั่วคราว คุณสามารถเปิดดูข้อมูลและส่งออก Excel ได้เท่านั้น แต่จะไม่สามารถสร้างหรือแก้ไขได้</span>
+        </div>
+
+        <div class="system-bar">
+            <div><i class="fa-solid fa-clock"></i> เวลาในระบบ: <span id="realtimeClock" class="clock-display">--:--:--</span></div>
+            <div id="currentMonthYear">รอบบันทึกข้อมูลประจำเดือน: <span style="font-weight: bold;" id="activeMonthDisplay"></span></div>
+        </div>
+
+        <header>
+            <div class="logo-area">
+                <i class="fa-solid fa-industry"></i>
+                <h1>AISIN - Line Stop Portal</h1>
+            </div>
+            <div class="user-status-area">
+                <div class="user-badge" id="currentUserBadge">สิทธิ์: ผู้ใช้ทั่วไป</div>
+                <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-sign-out-alt"></i> ออกจากระบบ</button>
+            </div>
+        </header>
+
+        <div class="container">
+            
+            <!-- แผงควบคุมแอดมิน -->
+            <div class="admin-control-panel" id="adminControlPanel">
+                <div class="admin-control-title">
+                    <i class="fa-solid fa-gears"></i>
+                    <span>ส่วนควบคุมแอดมิน: เปิด/ปิดระบบ & เคลียร์ข้อมูล</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="btn-secondary" style="background-color: var(--danger-color); color: white;" onclick="clearAllDataAdmin()"><i class="fa-solid fa-trash-can"></i> เคลียร์ข้อมูลทั้งหมด</button>
+                    <span style="font-size: 14px; font-weight: bold; color: #856404;" id="adminStatusText">สถานะ: เปิดรับคำขอ</span>
+                    <div class="switch-container">
+                        <div class="switch-btn active-no" id="lockBtnClose" onclick="toggleSystemOpen(false)">ปิดระบบ</div>
+                        <div class="switch-btn" id="lockBtnOpen" onclick="toggleSystemOpen(true)">เปิดระบบ</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="board-header">
+                <div class="board-title">
+                    <h2>รายการขออนุมัติหยุดไลน์ผลิต</h2>
+                    <p>ระบบบันทึกเวลา รายเดือน และระบบตรวจสอบย้อนกลับข้อมูล (Audit Trail)</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-success" onclick="exportToExcelCSV()">
+                        <i class="fa-solid fa-file-excel"></i> Export to Excel
+                    </button>
+                    <button class="btn-primary" id="btnCreateNew" onclick="openNewRequestModal()">
+                        <i class="fa-solid fa-plus"></i> สร้างคำขอใหม่
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Line</th>
+                                <th>Group</th>
+                                <th>Model</th>
+                                <th>D/N</th>
+                                <th>Start Date/Time</th>
+                                <th>Hours</th>
+                                <th>Main Request</th>
+                                <th>ผู้ส่งคำร้อง</th>
+                                <th style="width: 140px; text-align: center;">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requestTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- FORM MODAL --- -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">สร้างคำขอ Line Stop ใหม่</h3>
+                <button class="close-modal" onclick="closeModal('requestModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editIndex">
+
+                <div class="form-group">
+                    <label>รอบเดือนข้อมูลบันทึก <span class="required">*</span></label>
+                    <select id="dataMonthYearSelect"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="lineSelect">1. Line <span class="required">*</span></label>
+                    <select id="lineSelect" onchange="handleLineChange()">
+                        <option value="">-- เลือกไลน์ --</option>
+                        <option value="DC01">DC01</option><option value="DC02">DC02</option>
+                        <option value="DC03">DC03</option><option value="DC04">DC04</option>
+                        <option value="DC05">DC05</option><option value="DC06">DC06</option>
+                        <option value="DC07">DC07</option><option value="DC08">DC08</option>
+                        <option value="DC09">DC09</option><option value="DC10">DC10</option>
+                        <option value="DC11">DC11</option><option value="DC12">DC12</option>
+                        <option value="DC13">DC13</option><option value="DC14">DC14</option>
+                        <option value="HZ01">HZ01</option>
+                        <option value="DS01">DS01</option><option value="DS02">DS02</option><option value="DS03">DS03</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="groupText">2. Group <span class="required">*</span></label>
+                    <input type="text" id="groupText" disabled placeholder="ขึ้นอัตโนมัติตามไลน์ที่เลือก">
+                </div>
+
+                <div class="form-group">
+                    <label for="modelSelect">3. Model <span class="required">*</span></label>
+                    <select id="modelSelect">
+                        <option value="">-- กรุณาเลือกไลน์ก่อน --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dieNo">4. Die/Mold No. <span class="required">*</span></label>
+                    <input type="text" id="dieNo" placeholder="กรอกหมายเลข Die / Mold">
+                </div>
+
+                <!-- 24H TIME WITH 00/30 MINUTES LOCK -->
+                <div class="form-group">
+                    <label>5. Start Date/Time (ระบบเวลา 24H) <span class="required">*</span></label>
+                    <div class="time-select-grid">
+                        <input type="date" id="startDateRaw" onchange="calculateDuration()">
+                        <select id="startHour" onchange="calculateDuration()"></select>
+                        <select id="startMinute" onchange="calculateDuration()">
+                            <option value="00">00</option>
+                            <option value="30">30</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>6. End Date/Time (ระบบเวลา 24H) <span class="required">*</span></label>
+                    <div class="time-select-grid">
+                        <input type="date" id="endDateRaw" onchange="calculateDuration()">
+                        <select id="endHour" onchange="calculateDuration()"></select>
+                        <select id="endMinute" onchange="calculateDuration()">
+                            <option value="00">00</option>
+                            <option value="30">30</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="durationHours">7. Hours & Shift</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="durationHours" disabled placeholder="คำนวณชั่วโมงอัตโนมัติ" style="flex: 2;">
+                        <input type="text" id="shiftText" disabled placeholder="กะ D/N" style="flex: 1; text-align: center; font-weight: bold; background-color: #fff9db;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="requesterName">9. ชื่อผู้ส่งคำร้อง <span class="required">*</span></label>
+                    <input type="text" id="requesterName" placeholder="ระบุชื่อผู้ส่ง">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>8. Main request <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="mainRequest" value="PE"> PE</label>
+                        <label class="radio-item"><input type="radio" name="mainRequest" value="MT"> MT</label>
+                        <label class="radio-item"><input type="radio" name="mainRequest" value="QC"> QC</label>
+                        <label class="radio-item"><input type="radio" name="mainRequest" value="Request MFD"> Request MFD</label>
+                        <label class="radio-item"><input type="radio" name="mainRequest" value="Other"> Other</label>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>10. Change point <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="changePoint" value="1. Machine modify"> 1. Machine modify</label>
+                        <label class="radio-item"><input type="radio" name="changePoint" value="2. Jig/Die Modify"> 2. Jig/Die Modify</label>
+                        <label class="radio-item"><input type="radio" name="changePoint" value="3. Machine Trial"> 3. Machine Trial</label>
+                        <label class="radio-item"><input type="radio" name="changePoint" value="4. For new product"> 4. For new product</label>
+                        <label class="radio-item"><input type="radio" name="changePoint" value="5. Other"> 5. Other</label>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="eventLineStop">11. Event Line Stop <span class="required">*</span></label>
+                    <input type="text" id="eventLineStop" placeholder="ระบุรายละเอียดแผนงาน">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="objective">12. Objective <span class="required">*</span></label>
+                    <textarea id="objective" rows="2" placeholder="ระบุวัตถุประสงค์ในการหยุดไลน์"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>13. Support & Concerns</label>
+                    <div class="toggle-grid">
+                        <div class="toggle-item"><span>MFD Sub-Leader</span><div class="switch-container"><div class="switch-btn active-no" onclick="setSwitch(this, 'mfdSub', 'NO')">NO</div><div class="switch-btn" onclick="setSwitch(this, 'mfdSub', 'YES')">YES</div><input type="hidden" id="mfdSub" value="NO"></div></div>
+                        <div class="toggle-item"><span>MFD Operator Support</span><div class="switch-container"><div class="switch-btn active-no" onclick="setSwitch(this, 'mfdOp', 'NO')">NO</div><div class="switch-btn" onclick="setSwitch(this, 'mfdOp', 'YES')">YES</div><input type="hidden" id="mfdOp" value="NO"></div></div>
+                        <div class="toggle-item"><span>DMT Support</span><div class="switch-container"><div class="switch-btn active-no" onclick="setSwitch(this, 'dmt', 'NO')">NO</div><div class="switch-btn" onclick="setSwitch(this, 'dmt', 'YES')">YES</div><input type="hidden" id="dmt" value="NO"></div></div>
+                        <div class="toggle-item"><span>MT-DC Support</span><div class="switch-container"><div class="switch-btn active-no" onclick="setSwitch(this, 'mtdc', 'NO')">NO</div><div class="switch-btn" onclick="setSwitch(this, 'mtdc', 'YES')">YES</div><input type="hidden" id="mtdc" value="NO"></div></div>
+                        <div class="toggle-item"><span>QA Evaluation</span><div class="switch-container"><div class="switch-btn active-no" onclick="setSwitch(this, 'qa', 'NO')">NO</div><div class="switch-btn" onclick="setSwitch(this, 'qa', 'YES')">YES</div><input type="hidden" id="qa" value="NO"></div></div>
+                        <div class="toggle-item"><span>PCR Concern</span><div class="switch-container"><div class="switch-btn active-no" onclick="setSwitch(this, 'pcr', 'NO')">NO</div><div class="switch-btn" onclick="setSwitch(this, 'pcr', 'YES')">YES</div><input type="hidden" id="pcr" value="NO"></div></div>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="comment">15. Comment (ความคิดเห็นเพิ่มเติม)</label>
+                    <textarea id="comment" rows="2" placeholder="ความคิดเห็นเพิ่มเติม"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('requestModal')">ยกเลิก</button>
+                <button class="btn-primary" onclick="saveRequest()"><i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- VIEW DETAIL MODAL --- -->
+    <div class="modal" id="viewDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>รายละเอียดคำขอร้อง & ประวัติการตรวจสอบ (Audit Trail)</h3>
+                <button class="close-modal" onclick="closeModal('viewDetailModal')">&times;</button>
+            </div>
+            <div class="modal-body modal-body-view" id="viewDetailsContainer"></div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('viewDetailModal')">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toastMessage">สำเร็จ</div>
+
+    <script>
+        let userRole = ""; 
+        let isSystemOpen = true; 
+
+        if (localStorage.getItem("isSystemOpen") !== null) {
+            isSystemOpen = localStorage.getItem("isSystemOpen") === "true";
+        }
+
+        // โครงสร้าง Database จำลอง พร้อมประวัติการแก้ไข (Logs) และเวลาแสตมป์จริง
+        let requestsData = JSON.parse(localStorage.getItem("requestsData")) || [
+            {
+                monthYear: "2026-07",
+                line: "DC01",
+                group: "Valve Body",
+                model: "UPR",
+                dieNo: "DM-9901",
+                startDate: "2026-07-16 08:00",
+                endDate: "2026-07-16 12:00",
+                hours: "4.00",
+                dn: "D",
+                mainRequest: "PE",
+                requester: "สมชาย มีดี",
+                changePoint: "1. Machine modify",
+                eventLineStop: "ทดสอบเดินเครื่องใหม่หลังติดตั้งตู้ PLC",
+                objective: "เพื่อตรวจสอบระบบ Safety",
+                supports: { mfdSub: "YES", mfdOp: "NO", dmt: "YES", mtdc: "NO", qa: "YES", pcr: "YES" },
+                comment: "",
+                owner: "สมชาย มีดี",
+                timestamp: "2026-07-16 08:15:30", // แสตมป์เวลาจริงที่บันทึก
+                logs: ["สร้างรายการเมื่อ: 2026-07-16 08:15:30 โดย สมชาย มีดี"]
+            }
+        ];
+
+        const groupMapping = {
+            "DC01": "Valve Body", "DC02": "Valve Body", "DC03": "Valve Body",
+            "DC04": "non-IMV 1", "DC05": "non-IMV 1", "DC06": "IMV", "DC07": "IMV",
+            "DC08": "IMV", "DC09": "IMV", "DC10": "IMV", "DC11": "NEW-B",
+            "DC12": "NEW-B", "DC13": "non-IMV 2", "DC14": "non-IMV 2",
+            "HZ01": "Valve Body", "DS01": "Melting", "DS02": "Melting", "DS03": "Melting"
+        };
+
+        const modelMapping = {
+            "DC01": ["UPR"], "DC02": ["LWR"], "DC03": ["UPR", "LWR"],
+            "DC04": ["NR [926F]", "NR [889F]", "CC ES01"],
+            "DC05": ["ZR", "ZR-HV", "D41E", "D41E (ECI)", "D13E", "EFC", "EL-L"],
+            "DC06": ["GD (ECI)", "076E (ECI)"], "DC07": ["GD (ECI)", "076E (ECI)"],
+            "DC08": ["GD (ECI)", "076E"], "DC09": ["1 TR (863F)", "2 TR (864F)", "GD (ECI)", "6G4A", "THS-374"],
+            "DC10": ["1 TR (863F)", "2 TR (864F)"], "DC11": ["New-B"], "DC12": ["New-B"],
+            "DC13": ["ZR", "new ZR", "ZR CNG", "NR [889F]", "D83F"],
+            "DC14": ["NR [889F]", "NR [921F]", "new ZR", "TCC 3ZR", "NR [926F]"],
+            "HZ01": ["UPPER VALVE BODY", "LOWER VALVE BODY"], "DS01": [], "DS02": [], "DS03": []
+        };
+
+        // --- REALTIME SYSTEM CLOCK ---
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById("realtimeClock").textContent = now.toLocaleTimeString('th-TH', { hour12: false });
+        }, 1000);
+
+        // --- AUTO MONTH DROPDOWN ---
+        function initMonthOptions() {
+            const select = document.getElementById("dataMonthYearSelect");
+            select.innerHTML = "";
+            const now = new Date();
+            
+            // เดือนนี้ กับ เดือนถัดไป
+            for(let i = 0; i < 2; i++) {
+                let tempDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
+                let year = tempDate.getFullYear();
+                let month = String(tempDate.getMonth() + 1).padStart(2, '0');
+                let value = `${year}-${month}`;
+                let text = tempDate.toLocaleDateString('th-TH', { year: 'numeric', month: 'long' });
+                
+                let opt = document.createElement("option");
+                opt.value = value;
+                opt.textContent = text;
+                select.appendChild(opt);
+
+                if(i === 0) {
+                    document.getElementById("activeMonthDisplay").textContent = text;
+                }
+            }
+        }
+
+        // --- GENERATE HOUR DROPDOWNS (24-Hour Format) ---
+        function initHourDropdowns() {
+            const startHour = document.getElementById("startHour");
+            const endHour = document.getElementById("endHour");
+            startHour.innerHTML = "";
+            endHour.innerHTML = "";
+            
+            for(let i=0; i<24; i++) {
+                let hh = String(i).padStart(2, '0');
+                startHour.add(new Option(hh, hh));
+                endHour.add(new Option(hh, hh));
+            }
+        }
+
+        window.onload = () => {
+            initMonthOptions();
+            initHourDropdowns();
+        };
+
+        // --- LOGIN VERIFICATION ---
+        function verifyLogin() {
+            const pass = document.getElementById("sysPassword").value;
+            if (pass === "admin123") {
+                userRole = "admin";
+                document.getElementById("currentUserBadge").textContent = "สิทธิ์: Admin (ผู้ดูแล)";
+                document.getElementById("adminControlPanel").style.display = "flex";
+                enterSystem();
+            } else if (pass === "user123") {
+                userRole = "user";
+                document.getElementById("currentUserBadge").textContent = "สิทธิ์: User (ทั่วไป)";
+                document.getElementById("adminControlPanel").style.display = "none";
+                enterSystem();
+            } else {
+                alert("❌ รหัสผ่านไม่ถูกต้อง!");
+                document.getElementById("sysPassword").value = "";
+            }
+        }
+
+        function enterSystem() {
+            document.getElementById("loginOverlay").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+            applySystemLockState();
+            renderTable();
+        }
+
+        function handleLogout() {
+            userRole = "";
+            document.getElementById("sysPassword").value = "";
+            document.getElementById("loginOverlay").style.display = "flex";
+            document.getElementById("mainApp").style.display = "none";
+        }
+
+        function toggleSystemOpen(status) {
+            isSystemOpen = status;
+            localStorage.setItem("isSystemOpen", status);
+            applySystemLockState();
+            renderTable();
+            showToast(status ? "ระบบเปิดรับคำร้องปกติ" : "ปิดรับคำร้องประจำเดือนแล้ว!");
+        }
+
+        function applySystemLockState() {
+            const banner = document.getElementById("lockStatusBanner");
+            const btnCreate = document.getElementById("btnCreateNew");
+            const btnClose = document.getElementById("lockBtnClose");
+            const btnOpen = document.getElementById("lockBtnOpen");
+            const adminText = document.getElementById("adminStatusText");
+
+            btnClose.className = "switch-btn";
+            btnOpen.className = "switch-btn";
+
+            if (isSystemOpen) {
+                banner.style.display = "none";
+                btnCreate.disabled = false;
+                btnOpen.classList.add("active-yes");
+                adminText.textContent = "สถานะ: เปิดรับคำร้อง";
+                adminText.style.color = "var(--success-color)";
+            } else {
+                banner.style.display = "flex";
+                btnCreate.disabled = (userRole !== "admin");
+                btnClose.classList.add("active-no");
+                adminText.textContent = "สถานะ: ปิดระบบ";
+                adminText.style.color = "var(--danger-color)";
+            }
+        }
+
+        // --- CALCULATE DURATION & SHIFT (24H) ---
+        function calculateDuration() {
+            const startDateRaw = document.getElementById("startDateRaw").value;
+            const startHour = document.getElementById("startHour").value;
+            const startMinute = document.getElementById("startMinute").value;
+
+            const endDateRaw = document.getElementById("endDateRaw").value;
+            const endHour = document.getElementById("endHour").value;
+            const endMinute = document.getElementById("endMinute").value;
+
+            const durationInput = document.getElementById("durationHours");
+            const shiftInput = document.getElementById("shiftText");
+
+            if (!startDateRaw || !endDateRaw) return;
+
+            const startObj = new Date(`${startDateRaw}T${startHour}:${startMinute}:00`);
+            const endObj = new Date(`${endDateRaw}T${endHour}:${endMinute}:00`);
+
+            if (endObj <= startObj) {
+                showToast("เวลาสิ้นสุดต้องมากกว่าเวลาเริ่มต้น!");
+                durationInput.value = "";
+                return;
+            }
+
+            const diffMs = endObj - startObj;
+            const diffHours = (diffMs / (1000 * 60 * 60)).toFixed(2);
+            durationInput.value = diffHours;
+
+            // Shift Calculation (08:00 - 20:00 is Day Shift)
+            const hour = startObj.getHours();
+            shiftInput.value = (hour >= 8 && hour < 20) ? "D" : "N";
+        }
+
+        // --- CRUD ACTIONS ---
+        function renderTable() {
+            const tableBody = document.getElementById("requestTableBody");
+            tableBody.innerHTML = "";
+
+            requestsData.forEach((req, index) => {
+                let canEditDelete = (userRole === "admin" || (userRole === "user" && isSystemOpen));
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><span class="badge badge-line">${req.line}</span></td>
+                    <td><span class="badge badge-group">${req.group}</span></td>
+                    <td><span class="badge badge-model">${req.model || '-'}</span></td>
+                    <td><span class="badge badge-dn">${req.dn}</span></td>
+                    <td>${req.startDate}</td>
+                    <td><span class="badge badge-hours">${req.hours} ชม.</span></td>
+                    <td><strong>${req.mainRequest}</strong></td>
+                    <td>${req.requester}</td>
+                    <td class="action-btns" style="text-align: center; justify-content: center;">
+                        <button class="btn-icon btn-view" title="ดูประวัติ" onclick="viewDetails(${index})"><i class="fa-solid fa-eye"></i></button>
+                        <button class="btn-icon btn-edit" title="แก้ไข" onclick="editRequest(${index})" ${canEditDelete ? '' : 'disabled'}><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="btn-icon btn-delete" title="ลบ" onclick="deleteRequest(${index})" ${canEditDelete ? '' : 'disabled'}><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function openNewRequestModal() {
+            document.getElementById("modalTitle").textContent = "สร้างคำขอ Line Stop ใหม่";
+            document.getElementById("editIndex").value = "";
+            resetForm();
+            document.getElementById("requestModal").style.display = "flex";
+        }
+
+        function saveRequest() {
+            const monthYear = document.getElementById("dataMonthYearSelect").value;
+            const line = document.getElementById("lineSelect").value;
+            const group = document.getElementById("groupText").value;
+            const model = document.getElementById("modelSelect").value;
+            const dieNo = document.getElementById("dieNo").value.trim();
+            
+            const startDateRaw = document.getElementById("startDateRaw").value;
+            const startHour = document.getElementById("startHour").value;
+            const startMinute = document.getElementById("startMinute").value;
+
+            const endDateRaw = document.getElementById("endDateRaw").value;
+            const endHour = document.getElementById("endHour").value;
+            const endMinute = document.getElementById("endMinute").value;
+
+            const hours = document.getElementById("durationHours").value;
+            const dn = document.getElementById("shiftText").value;
+            const requester = document.getElementById("requesterName").value.trim();
+            
+            const mainRequestActive = document.querySelector('input[name="mainRequest"]:checked');
+            const mainRequest = mainRequestActive ? mainRequestActive.value : "";
+
+            const changePointActive = document.querySelector('input[name="changePoint"]:checked');
+            const changePoint = changePointActive ? changePointActive.value : "";
+
+            const eventLineStop = document.getElementById("eventLineStop").value.trim();
+            const objective = document.getElementById("objective").value.trim();
+            const comment = document.getElementById("comment").value.trim();
+
+            if (!line || !dieNo || !startDateRaw || !endDateRaw || !hours || !mainRequest || !requester || !changePoint || !eventLineStop || !objective) {
+                alert("❌ กรุณากรอกข้อมูลที่จำเป็น (*) ให้ครบถ้วน!");
+                return;
+            }
+
+            const formattedStart = `${startDateRaw} ${startHour}:${startMinute}`;
+            const formattedEnd = `${endDateRaw} ${endHour}:${endMinute}`;
+
+            const supports = {
+                mfdSub: document.getElementById("mfdSub").value,
+                mfdOp: document.getElementById("mfdOp").value,
+                dmt: document.getElementById("dmt").value,
+                mtdc: document.getElementById("mtdc").value,
+                qa: document.getElementById("qa").value,
+                pcr: document.getElementById("pcr").value,
+            };
+
+            const nowStr = new Date().toLocaleString('th-TH', { hour12: false });
+            const editIndex = document.getElementById("editIndex").value;
+
+            if (editIndex !== "") {
+                // EDIT LOGIC (บันทึก Audit Trail)
+                const oldObj = requestsData[editIndex];
+                const oldLogs = oldObj.logs || [];
+                oldLogs.push(`แก้ไขข้อมูลเมื่อ: ${nowStr} โดย ${requester} (แก้ไขเวลาหยุดเป็น: ${formattedStart} ถึง ${formattedEnd})`);
+                
+                requestsData[editIndex] = {
+                    monthYear, line, group, model, dieNo, startDate: formattedStart, endDate: formattedEnd, hours, dn, mainRequest, requester, changePoint, eventLineStop, objective, supports, comment,
+                    owner: oldObj.owner,
+                    timestamp: oldObj.timestamp,
+                    logs: oldLogs
+                };
+                showToast("แก้ไขข้อมูลเรียบร้อย!");
+            } else {
+                // NEW RECORD LOGIC
+                const newRequest = {
+                    monthYear, line, group, model, dieNo, startDate: formattedStart, endDate: formattedEnd, hours, dn, mainRequest, requester, changePoint, eventLineStop, objective, supports, comment,
+                    owner: requester,
+                    timestamp: nowStr,
+                    logs: [`สร้างรายการใหม่เมื่อ: ${nowStr} โดย ${requester}`]
+                };
+                requestsData.push(newRequest);
+                showToast("บันทึกข้อมูลคำร้องใหม่สำเร็จ!");
+            }
+
+            saveToLocalStorage();
+            closeModal("requestModal");
+            renderTable();
+        }
+
+        function editRequest(index) {
+            const req = requestsData[index];
+            document.getElementById("modalTitle").textContent = `แก้ไขข้อมูล (ID: ${index + 1})`;
+            document.getElementById("editIndex").value = index;
+
+            document.getElementById("dataMonthYearSelect").value = req.monthYear;
+            document.getElementById("lineSelect").value = req.line;
+            handleLineChange();
+
+            document.getElementById("modelSelect").value = req.model;
+            document.getElementById("dieNo").value = req.dieNo;
+
+            const startParts = req.startDate.split(" ");
+            document.getElementById("startDateRaw").value = startParts[0];
+            const startHMS = startParts[1].split(":");
+            document.getElementById("startHour").value = startHMS[0];
+            document.getElementById("startMinute").value = startHMS[1];
+
+            const endParts = req.endDate.split(" ");
+            document.getElementById("endDateRaw").value = endParts[0];
+            const endHMS = endParts[1].split(":");
+            document.getElementById("endHour").value = endHMS[0];
+            document.getElementById("endMinute").value = endHMS[1];
+
+            document.getElementById("durationHours").value = req.hours;
+            document.getElementById("shiftText").value = req.dn;
+            document.getElementById("requesterName").value = req.requester;
+
+            setSelectedRadio("mainRequest", req.mainRequest);
+            setSelectedRadio("changePoint", req.changePoint);
+
+            document.getElementById("eventLineStop").value = req.eventLineStop;
+            document.getElementById("objective").value = req.objective;
+            document.getElementById("comment").value = req.comment;
+
+            document.getElementById("requestModal").style.display = "flex";
+        }
+
+        function deleteRequest(index) {
+            if (confirm("คุณแน่ใจใช่หรือไม่ว่าต้องการลบคำร้องนี้?")) {
+                requestsData.splice(index, 1);
+                saveToLocalStorage();
+                renderTable();
+                showToast("ลบรายการสำเร็จ");
+            }
+        }
+
+        function clearAllDataAdmin() {
+            if (confirm("⚠️ คำเตือนแอดมิน: คุณต้องการเคลียร์และล้างข้อมูลเก่าทั้งหมดใช่หรือไม่? (การกระทำนี้กู้คืนไม่ได้)")) {
+                requestsData = [];
+                saveToLocalStorage();
+                renderTable();
+                showToast("ล้างข้อมูลเรียบร้อย!");
+            }
+        }
+
+        function viewDetails(index) {
+            const req = requestsData[index];
+            const container = document.getElementById("viewDetailsContainer");
+
+            let logHTML = req.logs.map(log => `<li>${log}</li>`).join("");
+
+            container.innerHTML = `
+                <div class="detail-row"><div class="detail-label">รอบเดือนข้อมูล:</div><div class="detail-value"><strong>${req.monthYear}</strong></div></div>
+                <div class="detail-row"><div class="detail-label">ไลน์ & กลุ่มงาน:</div><div class="detail-value"><span class="badge badge-line">${req.line}</span> (${req.group})</div></div>
+                <div class="detail-row"><div class="detail-label">ระยะเวลาหยุดไลน์:</div><div class="detail-value">${req.startDate} ถึง ${req.endDate} (<span class="badge badge-hours">${req.hours} ชั่วโมง</span>)</div></div>
+                <div class="detail-row"><div class="detail-label">แสตมป์เวลาบันทึกจริง:</div><div class="detail-value" style="color: var(--accent-color); font-weight:bold;">🕒 ${req.timestamp}</div></div>
+                <div class="detail-row" style="flex-direction: column;">
+                    <div class="detail-label" style="width: 100%; margin-bottom: 6px;">📜 ประวัติการบันทึก & ตรวจสอบย้อนกลับ (Audit Trail):</div>
+                    <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #eee; font-size:12px;">
+                        <ul style="padding-left:15px; line-height:1.8;">${logHTML}</ul>
+                    </div>
+                </div>
+            `;
+            document.getElementById("viewDetailModal").style.display = "flex";
+        }
+
+        function handleLineChange() {
+            const line = document.getElementById("lineSelect").value;
+            const groupInput = document.getElementById("groupText");
+            const modelSelect = document.getElementById("modelSelect");
+
+            if (!line) { groupInput.value = ""; modelSelect.innerHTML = '<option value="">-- เลือกไลน์ก่อน --</option>'; return; }
+
+            groupInput.value = groupMapping[line] || "";
+            const models = modelMapping[line] || [];
+            modelSelect.innerHTML = "";
+
+            if (models.length === 0) {
+                modelSelect.add(new Option("- ไม่มีโมเดล -", ""));
+            } else {
+                modelSelect.add(new Option("-- เลือกโมเดล --", ""));
+                models.forEach(m => modelSelect.add(new Option(m, m)));
+            }
+        }
+
+        function setSwitch(el, hiddenId, val) {
+            const container = el.parentElement;
+            container.querySelectorAll(".switch-btn").forEach(btn => btn.className = "switch-btn");
+            el.classList.add(val === "YES" ? "active-yes" : "active-no");
+            document.getElementById(hiddenId).value = val;
+        }
+
+        function saveToLocalStorage() { localStorage.setItem("requestsData", JSON.stringify(requestsData)); }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
+        function showToast(msg) { const t = document.getElementById("toastMessage"); t.textContent = msg; t.style.display = "block"; setTimeout(() => t.style.display="none", 3000); }
+        
+        function resetForm() {
+            document.getElementById("lineSelect").value = "";
+            document.getElementById("groupText").value = "";
+            document.getElementById("modelSelect").innerHTML = '<option value="">-- เลือกไลน์ก่อน --</option>';
+            document.getElementById("dieNo").value = "";
+            document.getElementById("startDateRaw").value = "";
+            document.getElementById("endDateRaw").value = "";
+            document.getElementById("durationHours").value = "";
+            document.getElementById("shiftText").value = "";
+            document.getElementById("requesterName").value = "";
+            document.getElementById("eventLineStop").value = "";
+            document.getElementById("objective").value = "";
+            document.getElementById("comment").value = "";
+            document.getElementsByName("mainRequest").forEach(r => r.checked = false);
+            document.getElementsByName("changePoint").forEach(r => r.checked = false);
+        }
+
+        function setSelectedRadio(name, val) {
+            document.getElementsByName(name).forEach(r => { if (r.value === val) r.checked = true; });
+        }
+
+        function exportToExcelCSV() {
+            let csv = "\uFEFFGroup,Line,Model,Die No,Start,End,Hours,Shift,Main Request,Requester,Timestamp\n";
+            requestsData.forEach(r => {
+                csv += `"${r.group}","${r.line}","${r.model}","${r.dieNo}","${r.startDate}","${r.endDate}","${r.hours}","${r.dn}","${r.mainRequest}","${r.requester}","${r.timestamp}"\n`;
+            });
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Line_Stop_Production_Report.csv";
+            link.click();
+        }
+    </script>
+</body>
+</html>
