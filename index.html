@@ -89,9 +89,11 @@
         .board-title h2 { font-size: 20px; color: var(--primary-color); }
         
         .controls-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; width: 100%; justify-content: space-between; margin-bottom: 15px; }
+        
+        /* FIX: ปรับแก้ช่องค้นหาไม่ให้ไอคอนทับตัวหนังสือ */
         .search-box { position: relative; width: 300px; }
-        .search-box input { width: 100%; padding: 8px 12px 8px 35px; border: 1px solid var(--border-color); border-radius: 6px; font-family: var(--font-th); font-size: 14px; }
-        .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .search-box input { width: 100%; padding: 8px 12px 8px 40px; border: 1px solid var(--border-color); border-radius: 6px; font-family: var(--font-th); font-size: 14px; }
+        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
 
         .filter-area { display: flex; gap: 10px; align-items: center; background: white; padding: 8px 15px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; }
         .btn-primary { background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-family: var(--font-th); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
@@ -233,7 +235,7 @@
                 <div style="color: #856404; font-weight: bold;"><i class="fa-solid fa-gears"></i> Admin System Controls (รอบแอดมิน Kittinun)</div>
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <label style="font-size:12px;">รอบเดือนคุมงาน:</label>
-                    <select id="adminTargetMonth" style="padding:4px; width:15px0px; font-size:12px;" onchange="adminChangeMonth(this.value)"></select>
+                    <select id="adminTargetMonth" style="padding:4px; width:150px; font-size:12px;" onchange="adminChangeMonth(this.value)"></select>
                     <div class="switch-container">
                         <div class="switch-btn active-no" id="lockBtnClose" onclick="toggleSystemOpen(false)">ปิดระบบ</div>
                         <div class="switch-btn" id="lockBtnOpen" onclick="toggleSystemOpen(true)">เปิดระบบ</div>
@@ -407,14 +409,15 @@
                     </div>
                 </div>
 
+                <!-- FIX: ปรับคำแนะนำช่องกรอกข้อมูลง่ายๆ สไตล์หน้างานตามบรีฟ -->
                 <div class="form-group full-width">
                     <label>11. Event Line Stop <span style="color:red;">*</span></label>
-                    <input type="text" id="eventLineStop" placeholder="ระบุรายละเอียดแผนงานทางวิศวกรรมและการจัดการหน้างาน">
+                    <input type="text" id="eventLineStop" placeholder="เกิดอะไรขึ้น หรือทำอะไร (เช่น เปลี่ยนใบมีด, ล้างโมลด์, เครื่องขัดข้อง)">
                 </div>
 
                 <div class="form-group full-width">
                     <label>12. Objective <span style="color:red;">*</span></label>
-                    <textarea id="objective" rows="2" placeholder="ระบุจุดประสงค์การทำงานให้ชัดเจนเพื่อประโยชน์ต่อการสืบย้อนกลับ"></textarea>
+                    <textarea id="objective" rows="2" placeholder="ทำไปเพื่ออะไร (เช่น ซ่อมแซมเครื่อง, เปลี่ยนโมลด์เตรียมผลิตงานใหม่, แก้ไขปัญหาชิ้นงานเสีย)"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -462,12 +465,14 @@
         // Database
         let requestsData = JSON.parse(localStorage.getItem("requestsData")) || [];
 
+        // FIX: อัปเดตผังข้อมูล Mapping Group ประจำไลน์ใหม่ถูกต้อง 100% ตามข้อกำหนดจริง
         const lineGroupMapping = {
-            "DC01": "Valve Body", "DC02": "Valve Body", "DC03": "Valve Body",
-            "DC04": "IMV", "DC05": "IMV", "DC06": "non-IMV 1", "DC07": "non-IMV 1",
-            "DC08": "non-IMV 1", "DC09": "non-IMV 2", "DC10": "non-IMV 2",
-            "DC11": "NEW-B", "DC12": "NEW-B", "DC13": "IMV", "DC14": "IMV",
-            "HZ01": "Valve Body", "DS01": "Melting", "DS02": "Melting", "DS03": "Melting"
+            "DC01": "Valve Body", "DC02": "Valve Body", "DC03": "Valve Body", "HZ01": "Valve Body",
+            "DC04": "non-IMV 1", "DC05": "non-IMV 1",
+            "DC13": "non-IMV 2", "DC14": "non-IMV 2",
+            "DC06": "IMV", "DC07": "IMV", "DC08": "IMV", "DC09": "IMV", "DC10": "IMV",
+            "DC11": "NEW-B", "DC12": "NEW-B",
+            "DS01": "Melting", "DS02": "Melting", "DS03": "Melting"
         };
 
         const modelMapping = {
@@ -556,7 +561,7 @@
                 userRole = "admin";
                 document.getElementById("adminControlPanel").style.display = "flex";
                 document.getElementById("loginOverlay").style.display = "none";
-                document.getElementById("welcomeOverlay").style.display = "flex"; // เด้งหน้าต้อนรับ Kittinun สุดเท่
+                document.getElementById("welcomeOverlay").style.display = "flex";
             } else if (pass === "user123") {
                 userRole = "user";
                 document.getElementById("adminControlPanel").style.display = "none";
@@ -586,7 +591,6 @@
                 return;
             }
 
-            // เซฟค่าจำรหัสคอมพิวเตอร์ (Remember Me)
             if (document.getElementById("rememberMeCheck").checked) {
                 localStorage.setItem("rem_name", name);
                 localStorage.setItem("rem_id", id);
@@ -676,7 +680,6 @@
                 groupHours[r.group] = (groupHours[r.group] || 0) + h;
             });
 
-            // กราฟแท่ง (Bar) แยกสะสมรายชั่วโมงกลุ่มงาน
             const barCtx = document.getElementById("groupBarChart").getContext("2d");
             if (barChartInstance) barChartInstance.destroy();
             barChartInstance = new Chart(barCtx, {
@@ -693,7 +696,6 @@
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // กราฟวงกลม (Pie) แจกแจงครั้งการเกิดปัญหา
             const pieCtx = document.getElementById("requestPieChart").getContext("2d");
             if (pieChartInstance) pieChartInstance.destroy();
             pieChartInstance = new Chart(pieCtx, {
@@ -738,7 +740,6 @@
             const groupInput = document.getElementById("groupSelect");
             const mSelect = document.getElementById("modelSelect");
             
-            // Auto group mapping ตามที่ตกลงกันไว้หน้างาน
             groupInput.value = lineGroupMapping[line] || "";
             
             mSelect.innerHTML = "";
@@ -756,7 +757,6 @@
 
             let filtered = requestsData.filter(r => r.monthYear === selectedMonth);
 
-            // Advanced Search Box Filter
             if(query !== "") {
                 filtered = filtered.filter(r => 
                     r.line.toLowerCase().includes(query) ||
@@ -772,7 +772,6 @@
                 let trueIndex = requestsData.findIndex(r => r === req);
                 let canEditDelete = (userRole === "admin" || (userRole === "user" && isSystemOpen && selectedMonth === currentActiveMonth));
                 
-                // Shift Color Badging Logic
                 let shiftClass = req.dn === "D" ? "badge-shift-d" : "badge-shift-n";
 
                 const tr = document.createElement("tr");
@@ -835,7 +834,6 @@
 
             const editIndex = document.getElementById("editIndex").value;
             if (editIndex !== "") {
-                // Dynamic Operator Audit Tracker
                 let old = requestsData[editIndex];
                 old.logs.push(`Edited by ${logProfileStamp} at ${nowStr}`);
                 requestsData[editIndex] = {
@@ -910,7 +908,8 @@
                 <div class="detail-row"><div class="detail-label">Cycle Month:</div><div class="detail-value"><strong>${req.monthYear}</strong></div></div>
                 <div class="detail-row"><div class="detail-label">Line Manufacturing:</div><div class="detail-value">${req.line} / Model: ${req.model} (Die Mold: ${req.dieNo})</div></div>
                 <div class="detail-row"><div class="detail-label">Downtime Span:</div><div class="detail-value">${req.startDate} ~ ${req.endDate} (<strong>${req.hours} Hours</strong> [Shift ${req.dn}])</div></div>
-                <div class="detail-row"><div class="detail-label">Engineering Details:</div><div class="detail-value"><strong>${req.changePoint}</strong> - ${req.eventLineStop}</div></div>
+                <div class="detail-row"><div class="detail-label">Details:</div><div class="detail-value"><strong>${req.changePoint}</strong> - ${req.eventLineStop}</div></div>
+                <div class="detail-row"><div class="detail-label">Objective:</div><div class="detail-value">${req.objective}</div></div>
                 <div class="detail-row"><div class="detail-label">Original Sender:</div><div class="detail-value">${req.requester}</div></div>
                 <div class="detail-row" style="flex-direction:column; background:#f8f9fa; padding:15px; border:1px dashed var(--primary-light); border-radius:8px; margin-top:10px;">
                     <div class="detail-label" style="width:100%; margin-bottom:10px; color:var(--primary-color);"><i class="fa-solid fa-fingerprint"></i> System Dynamic Audit Trail History</div>
@@ -942,6 +941,7 @@
             document.getElementsByName("changePoint").forEach(r => r.checked = false);
         }
 
+        // CSV Export Engine
         function exportToExcelCSV() {
             let csv = "\uFEFFCycle,Line,Group,Model,Die No,Start,End,Hours,Shift,Main Request,Sender\n";
             requestsData.forEach(r => {
